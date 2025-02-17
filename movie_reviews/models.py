@@ -10,6 +10,9 @@ class User(models.Model):
     password = models.CharField(max_length=200)
     date_joined = models.DateTimeField(auto_now_add=True)
     
+    class Meta:
+        ordering = ["-date_joined"] # Shows newest users first
+    
 class Movie(models.Model):
     movie_id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=200)
@@ -19,6 +22,9 @@ class Movie(models.Model):
     poster_url = models. CharField(max_length=250)
     slug = models.SlugField(unique=True, blank=True)  # Keep blank=True for automatic slug generation
     
+    class Meta:
+        ordering = ["average_rating", "-release_date"]
+        
     def save(self, *args, **kwargs):
         if not self.slug:  # Generate slug only if it doesn't already exist
             self.slug = slugify(self.title)
@@ -28,6 +34,9 @@ class Genre(models.Model):
     genre_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200)
     description = models.TextField()
+    
+    class Meta:
+        ordering = ["name"]
     
 class MovieGenre(models.Model):
     movie = models. ForeignKey('Movie', on_delete=models.CASCADE)
@@ -42,6 +51,9 @@ class MovieCast(models.Model):
     movie = models. ForeignKey('Movie', on_delete=models.CASCADE)
     person = models. ForeignKey('Person', on_delete=models.CASCADE)
     role = models.CharField(max_length=200)
+        
+    def __str__(self):
+        return f"{self.person.name} as {self.role} in {self.movie.title}"
     
 class Review(models.Model):
     review_id = models.AutoField(primary_key=True)
@@ -51,9 +63,18 @@ class Review(models.Model):
     review_text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     
+    def __str__(self):
+        return f"{self.user.username} - {self.movie.title} ({self.rating}/5)"
+    
 class Watchlist(models.Model):
     watchlist_id = models.AutoField(primary_key=True)
     user = models. ForeignKey('User', on_delete=models.CASCADE)
     movie = models. ForeignKey('Movie', on_delete=models.CASCADE)
     is_favourite = models.BooleanField(default=False) # Shows if movie/TV show is favourite
     added_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-added_at']
+        
+    def __str__(self):
+        return f"{self.user.username} - {self.movie.title} {'(Favourite)' if self.is_favourite else ''}"
