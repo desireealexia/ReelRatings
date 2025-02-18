@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- index.html content starts here -->
+<div class="container-fluid">
+    <div class="row">
+
+    <!-- Hero Section with Search -->
+    <section class="hero text-center py-5 bg-light">
+        <div class="container">
+            <h1 class="display-4">Welcome to ReelRatings</h1>
+            <p>Your ultimate source for movie and TV show reviews!</p>
+            <form action="{% url 'search_movies' %}" method="GET" class="d-flex my-4">
+                <input type="text" name="query" class="form-control me-2" placeholder="Search for a movie or TV show..." required>
+                <button type="submit" class="btn btn-danger">Search</button>
+            </form>
+            
+        </div>
+    </section>
+
+    <!-- Featured Movies/TV Shows Section -->
+    <section class="featured py-5">
+        <div class="container">
+            <h2 class="mb-4">Featured Movies</h2>
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                <div class="col">
+                    <div class="card">
+                        <img src="{{ movie.poster_url }}" class="card-img-top" alt="{{ movie.title }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ movie.title }}</h5>
+                            <p class="card-text">Rating: {% if movie.average_rating %}{{ movie.average_rating }}{% else %}No rating yet{% endif %}</p>
+                            <a href="/movies/1" class="btn btn-info">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card">
+                        <img src="{{ movie.poster_url }}" class="card-img-top" alt="{{ movie.title }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ movie.title }}</h5>
+                            <p class="card-text">Rating: {% if movie.average_rating %}{{ movie.average_rating }}{% else %}No rating yet{% endif %}</p>
+                            <a href="/movies/2" class="btn btn-info">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Add more movie cards here -->
+            </div>
+
+            <h2 class="mt-5 mb-4">Featured TV Shows</h2>
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                <div class="col">
+                    <div class="card">
+                        <img src="{{ movie.poster_url }}" class="card-img-top" alt="{{ movie.title }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ movie.title }}</h5>
+                            <p class="card-text">Rating: {% if movie.average_rating %}{{ movie.average_rating }}{% else %}No rating yet{% endif %}</p>
+                            <a href="/tv-shows/1" class="btn btn-info">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card">
+                        <img src="{{ movie.poster_url }}" class="card-img-top" alt="{{ movie.title }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ movie.title }}</h5>
+                            <p class="card-text">Rating: {% if movie.average_rating %}{{ movie.average_rating }}{% else %}No rating yet{% endif %}</p>
+                            <a href="/tv-shows/2" class="btn btn-info">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Add more TV show cards here -->
+            </div>
+        </div>
+    </section>
+
+<!-- index.html content ends here -->
+{% endblock %}

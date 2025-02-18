@@ -20,7 +20,7 @@ class Movie(models.Model):
     description = models.TextField()
     average_rating = models.DecimalField(max_digits=3, decimal_places=2, null=True, blank=True) # Nullable before rating
     poster_url = models. CharField(max_length=250)
-    slug = models.SlugField(unique=True, blank=True)  # Keep blank=True for automatic slug generation
+    slug = models.SlugField(unique=True)
     
     class Meta:
         ordering = ["average_rating", "-release_date"]
@@ -28,7 +28,7 @@ class Movie(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:  # Generate slug only if it doesn't already exist
             self.slug = slugify(self.title)
-        super(Movie, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 class Genre(models.Model):
     genre_id = models.AutoField(primary_key=True)
