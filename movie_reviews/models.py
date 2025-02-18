@@ -15,12 +15,12 @@ class User(models.Model):
     
 class Movie(models.Model):
     movie_id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=200)
-    release_date = models.DateField()
+    title = models.CharField(max_length=255)
+    release_date = models.DateField(null=True, blank=True)
     description = models.TextField()
     average_rating = models.DecimalField(max_digits=3, decimal_places=2, null=True, blank=True) # Nullable before rating
     poster_url = models. CharField(max_length=250)
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(max_length=200, unique=True)
     
     class Meta:
         ordering = ["average_rating", "-release_date"]
