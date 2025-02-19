@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Signup" %}{% endblock head_title %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+  <div class="card p-4 shadow-lg rounded-4" style="width: 100%; max-width: 400px;">
+      <h1 class="text-center mb-3">{% trans "Join ReelRatings!" %}</h1>
+      <p class="text-center text-muted">Create an account to review, rate, and track your favourite movies.</p>
+
+      <form class="signup" method="POST" action="{% url 'account_signup' %}">
+          {% csrf_token %}
+          <div class="mb-3">
+              {{ form.as_p }}
+          </div>
+          {% if redirect_field_value %}
+              <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+          {% endif %}
+          <button class="btn btn-success w-100" type="submit">{% trans "Sign Up" %}</button>
+      </form>
+
+      <p class="text-center mt-3">
+          Already have an account? <a href="{% url 'account_login' %}" class="text-decoration-none">Sign in here</a>.
+      </p>
+  </div>
+</div>
+{% endblock content %}

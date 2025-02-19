@@ -1,9 +1,10 @@
-from django.shortcuts import render, get_object_or_404
 from django.conf import settings
+from django.core.paginator import Paginator
+from django.db.utils import IntegrityError
+from django.shortcuts import render, get_object_or_404
 from django.utils.text import slugify
 from datetime import datetime
 from .models import Movie, Review, TVShow
-from django.db.utils import IntegrityError
 import requests
 
 # Create your views here.
@@ -98,8 +99,13 @@ def search(request):
 
                     except IntegrityError:
                         print(f"Duplicate slug detected: {unique_slug}")
+                        
+    # Paginate results (10 per page)
+    paginator = Paginator(results, 12)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
-    return render(request, 'movie_reviews/search_results.html', {'results': results, 'query': query})              
+    return render(request, 'movie_reviews/search_results.html', {'page_obj': page_obj, 'query': query})
 
 
 def movie_detail(request, slug):

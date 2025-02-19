@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Sign Out" %}{% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+  <div class="card p-4 shadow-lg rounded-4 text-center" style="width: 100%; max-width: 400px;">
+      <h1 class="mb-3">{% trans "Are you sure you want to log out?" %}</h1>
+      <p class="text-muted">You'll need to sign in again to continue reviewing and tracking your favourite movies.</p>
+
+      <form method="POST" action="{% url 'account_logout' %}">
+          {% csrf_token %}
+          <button class="btn btn-danger w-100" type="submit">{% trans "Confirm Sign Out" %}</button>
+      </form>
+
+      <a href="{% url 'homepage' %}" class="btn btn-outline-secondary w-100 mt-3">{% trans "Cancel and Return Home" %}</a>
+  </div>
+</div>
+{% endblock %}
