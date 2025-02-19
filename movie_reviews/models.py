@@ -18,18 +18,39 @@ class Movie(models.Model):
     title = models.CharField(max_length=255)
     release_date = models.DateField(null=True, blank=True)
     description = models.TextField()
-    average_rating = models.DecimalField(max_digits=3, decimal_places=2, null=True, blank=True) # Nullable before rating
-    poster_url = models. CharField(max_length=250)
+    average_rating = models.DecimalField(max_digits=3, decimal_places=2, null=True, blank=True)
+    poster_url = models.CharField(blank=True, null=True)
     slug = models.SlugField(max_length=200, unique=True)
     
     class Meta:
         ordering = ["average_rating", "-release_date"]
         
     def save(self, *args, **kwargs):
-        if not self.slug:  # Generate slug only if it doesn't already exist
+        if not self.slug:
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
+        
+    def __str__(self):
+        return self.title
 
+class TVShow(models.Model):
+    show_id = models.AutoField(primary_key=True)
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    poster_path = models.CharField(max_length=255)
+    release_date = models.DateField(null=True, blank=True)
+    average_rating = models.DecimalField(max_digits=3, decimal_places=2, null=True, blank=True)
+    poster_url = models.CharField(blank=True, null=True)
+    slug = models.SlugField(max_length=200, unique=True)
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+        
+    def __str__(self):
+        return self.title
+    
 class Genre(models.Model):
     genre_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200)
@@ -39,8 +60,8 @@ class Genre(models.Model):
         ordering = ["name"]
     
 class MovieGenre(models.Model):
-    movie = models. ForeignKey('Movie', on_delete=models.CASCADE)
-    genre = models. ForeignKey('Genre', on_delete=models.CASCADE)
+    movie = models.ForeignKey('Movie', on_delete=models.CASCADE)
+    genre = models.ForeignKey('Genre', on_delete=models.CASCADE)
 
 class Person(models.Model):
     person_id = models.AutoField(primary_key=True)
@@ -48,8 +69,8 @@ class Person(models.Model):
     role = models.CharField(max_length=200)
     
 class MovieCast(models.Model):
-    movie = models. ForeignKey('Movie', on_delete=models.CASCADE)
-    person = models. ForeignKey('Person', on_delete=models.CASCADE)
+    movie = models.ForeignKey('Movie', on_delete=models.CASCADE)
+    person = models.ForeignKey('Person', on_delete=models.CASCADE)
     role = models.CharField(max_length=200)
         
     def __str__(self):
@@ -57,19 +78,20 @@ class MovieCast(models.Model):
     
 class Review(models.Model):
     review_id = models.AutoField(primary_key=True)
-    user = models. ForeignKey('User', on_delete=models.CASCADE)
-    movie = models. ForeignKey('Movie', on_delete=models.CASCADE)
+    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    movie = models.ForeignKey('Movie', null=True, blank=True, on_delete=models.CASCADE)
+    tv_show = models.ForeignKey('TVShow', null=True, blank=True, on_delete=models.CASCADE)
     rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)]) # Rating between 1 and 5
     review_text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        return f"{self.user.username} - {self.movie.title} ({self.rating}/5)"
+        return f"Review for {self.movie or self.tv_show}"
     
 class Watchlist(models.Model):
     watchlist_id = models.AutoField(primary_key=True)
-    user = models. ForeignKey('User', on_delete=models.CASCADE)
-    movie = models. ForeignKey('Movie', on_delete=models.CASCADE)
+    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    movie = models.ForeignKey('Movie', on_delete=models.CASCADE)
     is_favourite = models.BooleanField(default=False) # Shows if movie/TV show is favourite
     added_at = models.DateTimeField(auto_now_add=True)
     

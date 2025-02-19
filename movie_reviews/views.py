@@ -2,29 +2,35 @@ from django.shortcuts import render, get_object_or_404
 from django.conf import settings
 from django.utils.text import slugify
 from datetime import datetime
-from .models import Movie, Review
+from .models import Movie, Review, TVShow
+from django.db.utils import IntegrityError
 import requests
 
 # Create your views here.
 def homepage(request):
-    # Fetch all movies from the database
-    movies = Movie.objects.all()
-    return render(request, 'movie_reviews/homepage.html', {'movies': movies})
+    return render(request, 'movie_reviews/homepage.html')
 
-def movie_detail(request, slug):
-    movie = get_object_or_404(Movie, slug=slug)
-    reviews = Review.objects.filter(movie=movie)
-    return render(request, 'movie_reviews/movie_detail.html', {
-        'movie': movie,
-        'reviews': reviews
-    })
+def generate_unique_slug(model, title):
+    """
+    Generate a unique slug for a given model and title.
+    """
+    base_slug = slugify(title)
+    unique_slug = base_slug
+    counter = 1
 
-def search_movies(request):
+    while model.objects.filter(slug=unique_slug).exists():
+        unique_slug = f"{base_slug}-{counter}"
+        counter += 1
+
+    return unique_slug
+
+def search(request):
     query = request.GET.get('query', '')
-    movies = []
-
+    results = []
+    
     if query:
-        url = "https://api.themoviedb.org/3/search/movie"
+        # Search for both movies and TV shows
+        url = "https://api.themoviedb.org/3/search/multi"
         params = {
             'api_key': settings.TMDB_API_KEY,
             'query': query,
@@ -34,41 +40,81 @@ def search_movies(request):
         response = requests.get(url, params=params)
         
         if response.status_code == 200:
-            movies_data = response.json().get('results', [])
+            search_results = response.json().get('results', [])
             
-            for movie_data in movies_data:
-                # Get release_date from the API response or set it to None if missing or empty
-                release_date = movie_data.get('release_date', None)
+            for item in search_results:
+                media_type = item.get('media_type')
 
-                # If release_date is empty, set it to None
-                if release_date == "":
-                    release_date = None
-                
-                # Check if the release date is in a valid format
-                if release_date:
+                if media_type in ['movie', 'tv']:  # Only process movies and TV shows
+                    title = item.get('title') if media_type == 'movie' else item.get('name')
+                    release_date = item.get('release_date') if media_type == 'movie' else item.get('first_air_date')
+                    description = item.get('overview', 'No description available')
+                    poster_url = f"https://image.tmdb.org/t/p/w500{item['poster_path']}" if item.get('poster_path') else 'https://dummyimage.com/500x750/000000/ffffff.jpg&text=No+Image+Available'
+
+                    # If release_date is empty, set it to None
+                    if release_date == "":
+                        release_date = None
+                        
+                    # Handle empty or invalid release dates
+                    if release_date:
+                        try:
+                            release_date = datetime.strptime(release_date, '%Y-%m-%d').date()
+                        except ValueError:
+                            release_date = None
+
+                    # Generate a unique slug
+                    unique_slug = generate_unique_slug(Movie if media_type == 'movie' else TVShow, title)
+
                     try:
-                        release_date = datetime.strptime(release_date, '%Y-%m-%d').date()
-                    except ValueError:
-                        release_date = None  # If date format is invalid, set it to None
+                        if media_type == 'movie':
+                            obj, created = Movie.objects.get_or_create(
+                                title=title,
+                                defaults={
+                                    'release_date': release_date,
+                                    'description': description,
+                                    'poster_url': poster_url,
+                                    'slug': unique_slug
+                                }
+                            )
+                        else:  # TV Show
+                            obj, created = TVShow.objects.get_or_create(
+                                title=title,
+                                defaults={
+                                    'release_date': release_date,
+                                    'description': description,
+                                    'poster_url': poster_url,
+                                    'slug': unique_slug
+                                }
+                            )
 
-                movie, created = Movie.objects.get_or_create(
-                    title=movie_data['title'],
-                    defaults={
-                        'release_date': release_date,
-                        'description': movie_data.get('overview', 'No description available'),
-                        'poster_url': "https://image.tmdb.org/t/p/w500" + (movie_data['poster_path'] if movie_data.get('poster_path') else ''),
-                        'slug': slugify(movie_data['title'])
-                    }
-                )
-                
-                if created:  # If the movie was newly created, print it for debugging
-                    print(f"Created new movie: {movie.title}")
-                else:
-                    print(f"Found existing movie: {movie.title}")
-                
-                movies.append(movie)  # Add the saved movie to the list
-                
-        else:
-            print(f"Failed to fetch data from TMDb. Status code: {response.status_code}")
+                        results.append({
+                            'title': title,
+                            'release_date': release_date,
+                            'description': description,
+                            'poster_url': poster_url,
+                            'media_type': media_type,
+                            'slug': obj.slug
+                        })
 
-    return render(request, 'movie_reviews/search_results.html', {'movies': movies, 'query': query})
+                    except IntegrityError:
+                        print(f"Duplicate slug detected: {unique_slug}")
+
+    return render(request, 'movie_reviews/search_results.html', {'results': results, 'query': query})              
+
+
+def movie_detail(request, slug):
+    movie = get_object_or_404(Movie, slug=slug)
+    reviews = Review.objects.filter(movie=movie)
+    print("Movie Data:", movie.title, movie.poster_url)  # Debugging
+    return render(request, 'movie_reviews/movie_detail.html', {
+        'movie': movie,
+        'reviews': reviews
+    })
+    
+def tv_detail(request, slug):
+    tv_show = get_object_or_404(TVShow, slug=slug)
+    reviews = Review.objects.filter(tv_show=tv_show)
+    return render(request, 'movie_reviews/tv_detail.html', {
+        'tv_show': tv_show,
+        'reviews': reviews
+    })

@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container mt-5">
     <h1>{{ movie.title }}</h1>
-    <img src="{{ movie.poster_url }}" alt="{{ movie.title }}">
+    <img src="{% if movie.poster_url %}{{ movie.poster_url }}{% else %}https://dummyimage.com/500x750/000000/ffffff.jpg&text=No+Image+Available{% endif %}" alt=" {{ movie.title }}">
                     <p><strong>Release Date:</strong> {{ movie.release_date|date:"Y-m-d" }}</p>
                     <p><strong>Description:</strong> {{ movie.description }}</p>
                     <p><strong>Rating:</strong> {% if movie.average_rating %}{{ movie.average_rating }}{% else %}No rating yet{% endif %}</p>
@@ -18,7 +18,6 @@
                     <p>No reviews yet.</p>
                 {% endfor %}
                 
-
-        <a href="{% url 'homepage' %}" class="btn btn-secondary">Back to Home</a>
-    </div>
+            <a href="{% url 'homepage' %}" class="btn btn-secondary">Back to Home</a>
+            </div>
 {% endblock %}

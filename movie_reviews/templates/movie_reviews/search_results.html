@@ -12,24 +12,36 @@
 
     <!-- Search Results -->
     <h1>Search Results for "{{ query }}"</h1>
-    <div class="row">
 
-    {% if movies %}
-        <div class="row">
-            {% for movie in movies %}
+    <div class="row">
+        {% if results %}
+            {% for item in results %}
                 <div class="col-md-3">
                     <div class="card mb-4">
-                        <img src="{{ movie.poster_url|default:'https://via.placeholder.com/500x750?text=No+Image+Available' }}" class="card-img-top" alt="{{ movie.title }}">
+                        <img src="{{ item.poster_url|default:'https://dummyimage.com/500x750/000000/ffffff.jpg&text=No+Image+Available' }}" class="card-img-top" alt="{{ item.title }}" width="100">
                         <div class="card-body">
-                            <h5 class="card-title">{{ movie.title }}</h5>
-                            <a href="{% url 'movie_detail' slug=movie.slug %}" class="btn btn-primary">View Details</a>
+                            <h5 class="card-title">{{ item.title }}</h5>
+                            <p class="card-text">
+                                <strong>Type:</strong> 
+                                {% if item.media_type == 'movie' %} Movie {% else %} TV Show {% endif %}
+                            </p>
+                            <p class="card-text">
+                                <strong>Release Date:</strong> {{ item.release_date|default:"Unknown" }}
+                            </p>
+
+                            <!-- Conditionally set the URL based on media type -->
+                            {% if item.media_type == 'movie' %}
+                                <a href="{% url 'movie_detail' slug=item.slug %}" class="btn btn-primary">View Details</a>
+                            {% elif item.media_type == 'tv' %}
+                                <a href="{% url 'tv_detail' slug=item.slug %}" class="btn btn-primary">View Details</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
             {% endfor %}
-        </div>
-    {% else %}
-        <p>No movies found. Try another search.</p>
-    {% endif %}
+        {% else %}
+            <p>No results found.</p>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}
