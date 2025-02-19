@@ -32,7 +32,7 @@ APP_TEMPLATES_DIR = os.path.join(BASE_DIR, 'movie_reviews/templates')  # App-spe
 SECRET_KEY = 'django-insecure-tg-w1e^wel8qwv)rybhbcnx6qzocngf6l#$0j(hgyf1eb-f0(t'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
@@ -124,7 +124,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = True 
 
-ACCOUNT_AUTHENTICATION_METHOD = "username"
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/

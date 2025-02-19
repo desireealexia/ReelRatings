@@ -27,6 +27,7 @@ def generate_unique_slug(model, title):
 
 def search(request):
     query = request.GET.get('query', '')
+    page_number = request.GET.get('page', 1)
     results = []
     
     if query:
@@ -99,13 +100,19 @@ def search(request):
 
                     except IntegrityError:
                         print(f"Duplicate slug detected: {unique_slug}")
-                        
-    # Paginate results (10 per page)
-    paginator = Paginator(results, 12)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    
+        # Pagination setup
+        paginator = Paginator(results, 8)  # Show 12 results per page
+        page_obj = paginator.get_page(page_number)  # Get the current page of results
+        
+        return render(request, 'movie_reviews/search_results.html', {
+            'query': query,
+            'results': page_obj.object_list,  # Use the page object's results
+            'page_obj': page_obj,  # Pass the page object for pagination controls
+        })
 
-    return render(request, 'movie_reviews/search_results.html', {'page_obj': page_obj, 'query': query})
+    return render(request, 'movie_reviews/search_results.html', {'query': query, 'results': results})
+                
 
 
 def movie_detail(request, slug):
