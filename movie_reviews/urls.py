@@ -7,5 +7,5 @@ urlpatterns = [
     path('movies/<slug:slug>/', views.movie_detail, name='movie_detail'),
     path('search/', views.search, name='search'),
     path('tv-shows/', views.tv_show_list, name='tv_show_list'),
-    path('tv/<slug:slug>/', views.tv_detail, name='tv_detail'),
+    path('tv-shows/<slug:slug>/', views.tv_detail, name='tv_detail'),
 ]

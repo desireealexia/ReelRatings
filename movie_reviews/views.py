@@ -164,8 +164,14 @@ def movie_list(request):
     # Add genre names to each movie based on genre_ids
     for movie in movies:
         movie['genre_names'] = [genre_dict.get(genre_id, 'Unknown') for genre_id in movie['genre_ids']]
+        movie['slug'] = slugify(movie.get('title', 'default-title'))
 
-    return render(request, 'movie_reviews/movies.html', {'movies': movies})
+    # Pagination
+    page_number = request.GET.get('page', 1)
+    paginator = Paginator(movies, 8)  # Show 8 movies per page
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'movie_reviews/movies.html', {'movies': page_obj.object_list, 'page_obj': page_obj})
 
 def tv_show_list(request):
     """Fetches TV shows from TMDB API and displays them."""
@@ -182,7 +188,13 @@ def tv_show_list(request):
     genre_dict = {genre['id']: genre['name'] for genre in genres}
 
     # Add genre names to each TV show based on genre_ids
-    for tv_show in tv_shows:
-        tv_show['genre_names'] = [genre_dict.get(genre_id, 'Unknown') for genre_id in tv_show.get('genre_ids', [])]
+    for show in tv_shows:
+        show['genre_names'] = [genre_dict.get(genre_id, 'Unknown') for genre_id in show.get('genre_ids', [])]
+        show['slug'] = slugify(show.get('name'))
 
-    return render(request, 'movie_reviews/tv_shows.html', {'tv_shows': tv_shows})
+    # Pagination
+    page_number = request.GET.get('page', 1)
+    paginator = Paginator(tv_shows, 8)  # Show 8 movies per page
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'movie_reviews/tv_shows.html', {'tv_shows': page_obj.object_list, 'page_obj': page_obj})
