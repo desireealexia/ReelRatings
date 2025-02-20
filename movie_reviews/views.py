@@ -8,9 +8,25 @@ from .models import Movie, Review, TVShow
 import requests
 
 # Create your views here.
-def homepage(request):
-    return render(request, 'movie_reviews/homepage.html')
 
+TMDB_API_KEY = settings.TMDB_API_KEY
+BASE_URL = 'https://api.themoviedb.org/3/'
+
+
+def homepage(request):
+    # Fetch Popular 5 Movies
+    movie_response = requests.get(f'{BASE_URL}movie/popular?api_key={TMDB_API_KEY}&language=en-US&page=1')
+    popular_movies = movie_response.json().get('results', [])[:5]
+
+    # Fetch Popular 5 TV Shows
+    tv_show_response = requests.get(f'{BASE_URL}tv/popular?api_key={TMDB_API_KEY}&language=en-US&page=1')
+    popular_tv_shows = tv_show_response.json().get('results', [])[:5]
+
+    return render(request, 'movie_reviews/homepage.html', {
+        'popular_movies': popular_movies,
+        'popular_tv_shows': popular_tv_shows
+    })
+    
 def generate_unique_slug(model, title):
     """
     Generate a unique slug for a given model and title.
@@ -112,8 +128,6 @@ def search(request):
         })
 
     return render(request, 'movie_reviews/search_results.html', {'query': query, 'results': results})
-                
-
 
 def movie_detail(request, slug):
     movie = get_object_or_404(Movie, slug=slug)
