@@ -22,12 +22,20 @@ class Movie(models.Model):
     poster_url = models.CharField(blank=True, null=True)
     slug = models.SlugField(max_length=200, unique=True)
     
+    genres = models.ManyToManyField('Genre', through='MovieGenre', related_name='movies')
+
     class Meta:
         ordering = ["average_rating", "-release_date"]
         
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
+            
+            original_slug = self.slug
+            counter = 1
+            while Movie.objects.filter(slug=self.slug).exists():
+                self.slug = f"{original_slug}-{counter}"
+                counter += 1
         super().save(*args, **kwargs)
         
     def __str__(self):
@@ -53,8 +61,7 @@ class TVShow(models.Model):
     
 class Genre(models.Model):
     genre_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=200)
-    description = models.TextField()
+    name = models.CharField(max_length=200, blank=True)
     
     class Meta:
         ordering = ["name"]

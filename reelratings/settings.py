@@ -23,7 +23,7 @@ TMDB_API_KEY = os.getenv('TMDB_API_KEY')
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')  # Global templates
-APP_TEMPLATES_DIR = os.path.join(BASE_DIR, 'movie_reviews/templates')  # App-specific templates
+APP_TEMPLATES_DIR = os.path.join(BASE_DIR, 'movies/templates')  # App-specific templates
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -53,7 +53,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'movie_reviews',
+    'movies',
 ]
 
 SITE_ID = 1

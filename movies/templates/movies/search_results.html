@@ -1,0 +1,52 @@
+{% extends "movies/base.html" %}
+
+{% block title %}Search Results for "{{ query }}" | Movie Search{% endblock %}
+{% block meta_description %}Find movies based on your search query. Discover details, recommendations, and explore similar movies.{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'homepage' %}">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Search Results</li>
+        </ol>
+    </nav>
+
+    <!-- Search Results -->
+    <h1 class="text-center mb-4">Search Results for "{{ query }}"</h1>
+
+    {% if movies %}
+    <div class="row">
+        {% for movie in movies %}
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="card h-100">
+                    <a href="{% url 'movie_detail' movie.id %}">
+                        <img src="{{ movie.poster_url }}" class="card-img-top" alt="{{ movie.title }}">
+                    </a>
+                    <div class="card-body text-center">
+                        <h5 class="card-title">{{ movie.title }}</h5>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p class="text-center text-muted">No results found. Try another search!</p>
+{% endif %}
+
+     <!-- Pagination -->
+     <!-- <div class="pagination justify-content-center mt-4">
+        {% if page_obj.has_previous %}
+            <a href="?query={{ query }}&page={{ page_obj.previous_page_number }}" class="btn btn-outline-primary">Previous</a>
+        {% endif %}
+    
+        <span class="btn btn-outline-secondary disabled">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+        {% if page_obj.has_next %}
+            <a href="?query={{ query }}&page={{ page_obj.next_page_number }}" class="btn btn-outline-primary">Next</a>
+        {% endif %}
+    </div> -->
+
+</div>
+{% endblock %}
