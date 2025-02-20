@@ -8,3 +8,24 @@ document.addEventListener("DOMContentLoaded", function () {
       toast.show();
     });
   });
+
+// Save scroll position before navigating to the next/previous page
+function saveScrollPosition() {
+  sessionStorage.setItem("scrollPosition", window.scrollY);
+}
+
+// Restore scroll position when the page loads
+function restoreScrollPosition() {
+  let scrollPosition = sessionStorage.getItem("scrollPosition");
+  if (scrollPosition) {
+      window.scrollTo(0, scrollPosition);
+  }
+}
+
+// Trigger scroll restore on page load
+window.onload = restoreScrollPosition;
+
+// Trigger scroll save before navigating to the next or previous page
+document.querySelectorAll('.pagination a').forEach(function(link) {
+  link.addEventListener('click', saveScrollPosition);
+});

@@ -1,4 +1,4 @@
-{% extends "movies/base.html" %}
+{% extends "base.html" %}
 
 {% block title %}Search Results for "{{ query }}" | Movie Search{% endblock %}
 {% block meta_description %}Find movies based on your search query. Discover details, recommendations, and explore similar movies.{% endblock %}
@@ -8,7 +8,7 @@
     <!-- Breadcrumb -->
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{% url 'homepage' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
             <li class="breadcrumb-item active" aria-current="page">Search Results</li>
         </ol>
     </nav>
