@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ movie.title }} | Movie Details{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center">{{ movie.title }}</h1>
+    <div class="row">
+        <!-- Left Column: Movie Poster and Basic Details -->
+        <div class="col-md-4">
+            <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" class="img-fluid rounded" alt="{{ movie.title }}">
+        </div>
+
+        <!-- Right Column: Overview, Details, and Recommendations -->
+        <div class="col-md-8">
+            <p>{{ movie.overview }}</p>
+            
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Details</h5>
+                    
+                    <!-- Runtime -->
+                    <p><strong>Runtime:</strong> {% if movie.runtime %} {{ movie.runtime }} mins {% else %} ⸺ {% endif %}</p>
+
+                    <!-- Genres -->
+                    <p><strong>Genres:</strong> 
+                    {% if movie.genres %}
+                        {% for genre in movie.genres %}
+                            {{ genre.name }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        ⸺
+                    {% endif %}
+                    </p>
+
+                    <!-- Production Companies -->
+                    <p><strong>Production:</strong>
+                    {% if movie.production_companies %}
+                        {% for company in movie.production_companies %}
+                            {{ company.name }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        ⸺
+                    {% endif %}
+                    </p>
+
+                    <!-- Spoken Languages -->
+                    <p><strong>Spoken Languages:</strong> 
+                    {% if movie.spoken_languages %}
+                        {% for language in movie.spoken_languages %}
+                            {{ language.name }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        ⸺
+                    {% endif %}
+                    </p>
+                </div>
+            </div>
+            
+            <div class="card mt-3">
+                <div class="card-body">
+                    <!-- Vote Average and Tagline -->
+                    <div>
+                        <i class="fa fa-star" style="color: limegreen"></i>
+                        <strong style="font-size: 2rem; color: limegreen; font-weight: 900">{{ movie.vote_average }}/10</strong>
+                    </div>
+                    <h5 class="card-subtitle mb-2 text-muted">{{ movie.tagline }}</h5>
+                </div>
+            </div>
+
+    <!-- Cast and Crew Card -->
+    {% if cast %}
+        <div class="card mt-3">
+            <div class="card-body">
+                <h5>Cast</h5>
+                <ul>
+                    {% for member in cast %}
+                        <li>{{ member.name }}{% if member.character %} as {{ member.character }}{% endif %}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if crew %}
+        <div class="card mt-3">
+            <div class="card-body">
+                <h5>Crew</h5>
+                <ul>
+                    {% for member in crew %}
+                        <li>{{ member.name }}{% if member.job %} - {{ member.job }}{% endif %}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Trailers Card -->
+    {% for trailer in trailers %}
+        <div class="card mt-3">
+            <div class="card-body">
+                <h5>Trailer</h5>
+                <div class="embed-responsive embed-responsive-16by9">
+                    <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{ trailer.key }}" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+</div>
+
+    <!-- Reviews -->
+    <h2 class="mt-5">Reviews</h2>
+    {% if reviews %}
+    <div class="row">
+        {% for review in reviews %}
+            <div class="col-md-4 mb-4">
+                <!-- Individual Review Card -->
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ review.author }}</h5>
+                        <p class="card-text">{{ review.content }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <div class="card mt-3">
+            <div class="card-body">
+                <p>⸺</p>
+            </div>
+        </div>
+{% endif %}
+    
+    <!-- Recommendations -->
+    <h2 class="mt-5">Recommendations</h2>
+    <div class="row">
+        {% for rec in recommendations %}
+            <div class="col-md-3">
+                <div class="card">
+                    <a href="{% url 'movie_detail' rec.id %}">
+                        <img src="https://image.tmdb.org/t/p/w500{{ rec.poster_path }}" class="card-img-top" alt="{{ rec.title }}">
+                    </a>
+                    <div class="card-body text-center">
+                        <h6 class="card-title">{{ rec.title }}</h6>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    </div>
+{% endblock %}
