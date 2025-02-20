@@ -145,3 +145,44 @@ def tv_detail(request, slug):
         'tv_show': tv_show,
         'reviews': reviews
     })
+    
+def movie_list(request):
+    """Fetches movies from TMDB API and displays them."""
+    # Fetch movie data
+    url = f"{BASE_URL}movie/popular?api_key={TMDB_API_KEY}&language=en-US&page=1"
+    response = requests.get(url)
+    movies = response.json().get('results', [])
+    
+    # Fetch all genres
+    genre_url = f"{BASE_URL}genre/movie/list?api_key={TMDB_API_KEY}&language=en-US"
+    genre_response = requests.get(genre_url)
+    genres = genre_response.json().get('genres', [])
+    
+     # Create a mapping of genre_id to genre_name
+    genre_dict = {genre['id']: genre['name'] for genre in genres}
+
+    # Add genre names to each movie based on genre_ids
+    for movie in movies:
+        movie['genre_names'] = [genre_dict.get(genre_id, 'Unknown') for genre_id in movie['genre_ids']]
+
+    return render(request, 'movie_reviews/movies.html', {'movies': movies})
+
+def tv_show_list(request):
+    """Fetches TV shows from TMDB API and displays them."""
+    url = f"{BASE_URL}tv/popular?api_key={TMDB_API_KEY}&language=en-US&page=1"
+    response = requests.get(url)
+    tv_shows = response.json().get('results', [])
+    
+     # Fetch genres for TV shows
+    genre_url = f"{BASE_URL}genre/tv/list?api_key={TMDB_API_KEY}&language=en-US"
+    genre_response = requests.get(genre_url)
+    genres = genre_response.json().get('genres', [])
+    
+    # Create a mapping of genre_id to genre_name
+    genre_dict = {genre['id']: genre['name'] for genre in genres}
+
+    # Add genre names to each TV show based on genre_ids
+    for tv_show in tv_shows:
+        tv_show['genre_names'] = [genre_dict.get(genre_id, 'Unknown') for genre_id in tv_show.get('genre_ids', [])]
+
+    return render(request, 'movie_reviews/tv_shows.html', {'tv_shows': tv_shows})
