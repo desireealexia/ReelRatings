@@ -8,7 +8,7 @@
     <div class="row">
         <!-- Left Column: Movie Poster and Basic Details -->
         <div class="col-md-4">
-            <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" class="img-fluid rounded" alt="{{ movie.title }}">
+            <img src="{% if movie.poster_path %}https://image.tmdb.org/t/p/w500{{ movie.poster_path }}{% else %}https://dummyimage.com/500x750/000000/ffffff&text=No+Image+Available{% endif %}" class="img-fluid rounded" alt="{{ movie.title }}">
         </div>
 
         <!-- Right Column: Overview, Details, and Recommendations -->

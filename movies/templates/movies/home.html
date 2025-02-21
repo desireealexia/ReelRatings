@@ -12,7 +12,7 @@
         <h1 class="display-4">Welcome to ReelRatings</h1>
         <p>Your ultimate source for movie and TV show reviews!</p>
         <form action="{% url 'search_results' %}" method="GET" class="d-flex my-4">
-            <input type="text" name="query" class="form-control me-2" placeholder="Search for a movie or TV show..." required>
+            <input type="text" name="q" class="form-control me-2" placeholder="Search for a movie or TV show..." required>
             <button type="submit" class="btn btn-danger">Search</button>
         </form>
     </div>

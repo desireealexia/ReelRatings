@@ -1,6 +1,9 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.views import View
+from django.http import HttpResponse
+from django.conf import settings
+import requests
 from .utils import get_tmdb_data
 
 # Create your views here.
@@ -40,32 +43,33 @@ class MovieDetailView(View):
             'language': 'en-US'
         })
         recommendations = get_tmdb_data(f"movie/{movie_id}/recommendations", {'language': 'en-US'})
+        
+        recommendations_list = recommendations.get('results', [])
         return render(request, 'movies/movie_detail.html', {
             'movie': movie,
-            'recommendations': recommendations['results']
+            'recommendations': recommendations_list
         })
         
 class TVShowDetailView(View):
-    def get(self, request, show_id):
-        show = get_tmdb_data(f"tv/{show_id}", {
+    def get(self, request, series_id):
+        show = get_tmdb_data(f"tv/{series_id}", {
             'language': 'en-US'
         })
-        recommendations = get_tmdb_data(f"tv/{show_id}/recommendations", {'language': 'en-US'})
+        recommendations = get_tmdb_data(f"tv/{series_id}/recommendations", {'language': 'en-US'})
+        
+        recommendations_list = recommendations.get('results', [])
         return render(request, 'movies/tv_show_detail.html', {
             'show': show,
-            'recommendations': recommendations['results']
+            'recommendations': recommendations_list
         })
         
 class SearchResultsView(View):
-    def get(self,request):
-        query = request.GET.get('q', '')
-        search_results = []
-        
-        if query:
-            search_results = get_tmdb_data('search/movie', {
-                'query': query, 'language': 'en-US'})['results']
-        
-        return render(request, 'movies/search_results.html', {
-            'movies': search_results,
-            'query': query
-        })
+    def get(self, request):
+        query = request.GET.get('q', '')  # Get search query
+        search_results = get_tmdb_data(f"search/multi?query={query}")
+
+        context = {
+            "query": query,
+            "results": search_results.get('results', []),}
+
+        return render(request, "movies/search_results.html", context)

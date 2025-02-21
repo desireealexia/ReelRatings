@@ -16,37 +16,120 @@
     <!-- Search Results -->
     <h1 class="text-center mb-4">Search Results for "{{ query }}"</h1>
 
-    {% if movies %}
-    <div class="row">
-        {% for movie in movies %}
-            <div class="col-md-3 col-sm-6 mb-4">
-                <div class="card h-100">
-                    <a href="{% url 'movie_detail' movie.id %}">
-                        <img src="{{ movie.poster_url }}" class="card-img-top" alt="{{ movie.title }}">
-                    </a>
-                    <div class="card-body text-center">
-                        <h5 class="card-title">{{ movie.title }}</h5>
+    {% if results %}
+        <div class="row">
+            {% for item in results %}
+                <div class="col-md-3 mb-3">
+                    <div class="card">
+                        <img src="{% if item.poster_path %}https://image.tmdb.org/t/p/w500{{ item.poster_path }}{% else %}https://dummyimage.com/500x750/000000/ffffff&text=No+Image+Available{% endif %}" class="card-img-top" alt="{{ item.title }}">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                {% if item.title %}
+                                    {{ item.title }}  <!-- Movie title -->
+                                {% elif item.name %}
+                                    {{ item.name }}  <!-- TV show name -->
+                                {% else %}
+                                    Unknown Title
+                                {% endif %}
+                            </h5>
+                            <p class="card-text">
+                                <strong>Type:</strong> 
+                                {% if item.media_type == 'movie' %}
+                                    Movie
+                                {% elif item.media_type == 'tv' %}
+                                    TV Show
+                                {% endif %}
+                            </p>
+                            <p class="card-text">
+                                <strong>Release Date:</strong> 
+                                {% if item.media_type == 'movie' %}
+                                    {{ item.release_date }}  <!-- Movie title -->
+                                {% elif item.media_type == 'tv' %}
+                                    {{ item.first_air_date }}  <!-- TV show name -->
+                                {% else %}
+                                    Unknown Date
+                                {% endif %}
+                            </p>
+                            <a href="{% if item.media_type == 'tv' %}{% url 'tv_show_detail' item.id %}{% else %}{% url 'movie_detail' item.id %}{% endif %}" class="btn btn-primary">View Details</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        {% endfor %}
-    </div>
-{% else %}
-    <p class="text-center text-muted">No results found. Try another search!</p>
-{% endif %}
-
-     <!-- Pagination -->
-     <!-- <div class="pagination justify-content-center mt-4">
-        {% if page_obj.has_previous %}
-            <a href="?query={{ query }}&page={{ page_obj.previous_page_number }}" class="btn btn-outline-primary">Previous</a>
-        {% endif %}
-    
-        <span class="btn btn-outline-secondary disabled">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-
-        {% if page_obj.has_next %}
-            <a href="?query={{ query }}&page={{ page_obj.next_page_number }}" class="btn btn-outline-primary">Next</a>
-        {% endif %}
-    </div> -->
-
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No results found for "{{ query }}".</p>
+    {% endif %}
 </div>
 {% endblock %}
+
+
+    <!-- {% if page_obj.object_list %}
+        <div class="row">
+            {% for item in page_obj.object_list %}
+                <div class="col-md-3 mb-4">
+                    <div class="card">
+                        <a href="{% url 'movie_detail' movie.id %}">
+                            <img src="{{ item.poster_path }}" class="card-img-top" alt="{{ item.title|default:item.name }}">
+                        </a>
+                        <div class="card-body text-center">
+                            <h5 class="card-title">{{ item.title|default:item.name }}</h5>
+                            <p class="card-text">
+                                {% if item.media_type == 'movie' %}
+                                    <strong>Movie</strong>
+                                {% elif item.media_type == 'tv' %}
+                                    <strong>TV Show</strong>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div> -->
+
+    <!-- <h2 class="mt-4">TV Shows</h2>
+    {% if tv_shows %}
+        <div class="row">
+            {% for tv_show in tv_shows %}
+                <div class="col-md-3 mb-4">
+                    <div class="card">
+                        <a href="{% url 'tv_show_detail' tv_show.id %}">
+                            <img src="https://image.tmdb.org/t/p/w500{{ tv_show.poster_path }}" class="card-img-top" alt="{{ tv_show.name }}">
+                        </a>
+                        <div class="card-body text-center">
+                            <h5 class="card-title">{{ tv_show.name }}</h5>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No TV shows found.</p>
+    {% endif %} -->
+
+     <!-- Pagination -->
+     <!-- {% if page_obj.has_other_pages %}
+     <nav aria-label="Page navigation">
+     <ul class="pagination justify-content-center mt-4">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a href="?q={{ query }}&page={{ page_obj.previous_page_number }}" class="btn btn-outline-primary">Previous</a>
+        </li>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+        <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+            <a class="page-link" href="?q={{ query }}&page={{ num }}">{{ num }}</a>
+        </li>
+    {% endfor %}
+    
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a href="?q={{ query }}&page={{ page_obj.next_page_number }}" class="btn btn-outline-primary">Next</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% else %}
+<p>No results found for "{{ query }}". Try another search.</p>
+{% endif %} -->
