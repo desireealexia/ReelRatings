@@ -16,6 +16,38 @@
     <!-- Search Results -->
     <h1 class="text-center mb-4">Search Results for "{{ query }}"</h1>
 
+    <!-- Filter Form -->
+    <form method="GET" class="mb-4" action="{% url 'search_results' %}">
+        <div class="row">
+            <div class="col-md-3">
+                <input type="text" name="q" class="form-control" placeholder="Search..." value="{{ query }}">
+            </div>
+            <div class="col-md-3">
+                <!-- Genre Filter -->
+                <select name="genre" class="form-control">
+                    <option value="">Genres</option>
+                    {% for genre in genres %}
+                    <option value="{{ genre.id }}" {% if genre.id|stringformat:"d" == selected_genre %}selected{% endif %}>
+                        {{ genre.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+             <!-- Sort By Filter -->
+             <div class="col-md-3">
+    <select name="sort" class="form-control">
+        <option value="title" {% if request.GET.sort_by == 'title' %}selected{% endif %}>Sort by A-Z</option>
+        <option value="popularity" {% if selected_sort == 'popularity' %}selected{% endif %}>Sort by Popularity</option>
+        <option value="release_date.desc" {% if selected_sort == 'release_date.desc' %}selected{% endif %}>Sort by Release Date</option>
+    </select>
+    </div>
+    
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+            </div>
+        </div>
+    </form>
+
     {% if results %}
         <div class="row">
             {% for item in results %}

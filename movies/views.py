@@ -66,10 +66,32 @@ class TVShowDetailView(View):
 class SearchResultsView(View):
     def get(self, request):
         query = request.GET.get('q', '')  # Get search query
+        genre_filter = request.GET.get('genre', '')
+        sort_by = request.GET.get('sort_by', 'popularity')
+        
+        genres = get_tmdb_data('genre/movie/list', {'language': 'en-US'})['genres']
+        tv_genres = get_tmdb_data('genre/tv/list', {'language': 'en-US'})['genres']
+        
+        params = {
+            'query': query, 
+            'language': 'en-US', 
+        }
+        
+        if genre_filter:
+            params['with_genres'] = genre_filter
+        
+        if sort_by:
+            params['sort_by'] = sort_by
+            
         search_results = get_tmdb_data(f"search/multi?query={query}")
 
         context = {
             "query": query,
-            "results": search_results.get('results', []),}
+            "results": search_results.get('results', []),
+            "genres": genres,
+            "tv_genres": tv_genres,
+            'selected_genre': genre_filter,
+            'selected_sort': sort_by
+        }
 
         return render(request, "movies/search_results.html", context)
