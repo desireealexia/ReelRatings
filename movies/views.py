@@ -66,32 +66,44 @@ class TVShowDetailView(View):
 class SearchResultsView(View):
     def get(self, request):
         query = request.GET.get('q', '')  # Get search query
-        genre_filter = request.GET.get('genre', '')
-        sort_by = request.GET.get('sort_by', 'popularity')
-        
-        genres = get_tmdb_data('genre/movie/list', {'language': 'en-US'})['genres']
-        tv_genres = get_tmdb_data('genre/tv/list', {'language': 'en-US'})['genres']
-        
+        genre_filter = request.GET.get('genre', '')  # Get genre filter
+        sort_by = request.GET.get('sort', 'popularity.desc')  # Default sort by popularity
+
         params = {
-            'query': query, 
-            'language': 'en-US', 
+            'query': query,
+            'language': 'en-US',
+            'page': 1,
         }
+
+        search_results = get_tmdb_data('search/multi', params=params)
         
+        results_list = search_results.get("results", [])
+        
+        # Apply genre filter
         if genre_filter:
-            params['with_genres'] = genre_filter
+            try:
+                genre_id = int(genre_filter)
+                filtered_results = [movie for movie in results_list if genre_id in movie.get("genre_ids", [])]
+            except ValueError:
+                filtered_results = results_list
+        else:
+            filtered_results = results_list 
         
-        if sort_by:
-            params['sort_by'] = sort_by
-            
-        search_results = get_tmdb_data(f"search/multi?query={query}")
+        # Apply sort by filter  
+        if sort_by == 'popularity.desc':
+            filtered_results = sorted(filtered_results, key=lambda x: x.get('popularity', 0), reverse=True)
+        elif sort_by == 'release_date.desc':
+            filtered_results = sorted(filtered_results, key=lambda x: x.get('release_date', ''), reverse=True)
+        elif sort_by == 'title':
+            filtered_results = sorted(filtered_results, key=lambda x: x.get('title', '').lower())
 
         context = {
-            "query": query,
-            "results": search_results.get('results', []),
-            "genres": genres,
-            "tv_genres": tv_genres,
+            'results': filtered_results,
+            'query': query,
+            'genres': get_tmdb_data('genre/movie/list', {'language': 'en-US'})['genres'],
+            'tv_genres': get_tmdb_data('genre/tv/list', {'language': 'en-US'})['genres'],
             'selected_genre': genre_filter,
             'selected_sort': sort_by
         }
 
-        return render(request, "movies/search_results.html", context)
+        return render(request, 'movies/search_results.html', context)
