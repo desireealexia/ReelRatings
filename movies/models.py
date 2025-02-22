@@ -15,15 +15,22 @@ class User(models.Model):
     
 class Review(models.Model):
     review_id = models.AutoField(primary_key=True)
-    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     movie_id = models.IntegerField(null=True, blank=True)
     tv_show_id = models.IntegerField(null=True, blank=True)
+    movie_title = models.CharField(max_length=255, null=True, blank=True) 
+    tv_show_title = models.CharField(max_length=255, null=True, blank=True)
     rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
     review_text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        return f"Review by {self.user.username} for Movie ID {self.movie_id or 'N/A'}"
+        if self.movie_id:
+            return f"Review by {self.user.username} for '{self.movie_title}'"
+        elif self.tv_show_id:
+            return f"Review by {self.user.username} for '{self.tv_show_title}'"
+        else:
+            return f"Review by {self.user.username}"
     
 class Watchlist(models.Model):
     watchlist_id = models.AutoField(primary_key=True)

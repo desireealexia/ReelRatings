@@ -32,7 +32,7 @@ APP_TEMPLATES_DIR = os.path.join(BASE_DIR, 'movies/templates')  # App-specific t
 SECRET_KEY = 'django-insecure-tg-w1e^wel8qwv)rybhbcnx6qzocngf6l#$0j(hgyf1eb-f0(t'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
@@ -144,7 +144,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
-     BASE_DIR / "static",
+    BASE_DIR / "static",
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 

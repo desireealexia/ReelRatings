@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block title %}{{ show.name }} | TV Show Details{% endblock %}
 
 {% block content %}
@@ -109,29 +111,56 @@
 </div>
 </div>
 
-    <!-- Reviews -->
-    <h2 class="mt-5">Reviews</h2>
-    {% if reviews %}
-    <div class="row">
-        {% for review in reviews %}
-            <div class="col-md-4 mb-4">
-                <!-- Individual Review Card -->
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ review.author }}</h5>
-                        <p class="card-text">{{ review.content }}</p>
-                    </div>
+<!-- Reviews -->
+<h2 class="mt-5">Reviews</h2>
+{% if reviews %}
+<div class="row">
+    {% for review in reviews %}
+        <div class="col-md-4 mb-4">
+            <!-- Individual Review Card -->
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ review.user.username }}</h5>
+                            <p class="card-text">{{ review.review_text }}</p>
+                            <p class="card-text"><strong>Rating:</strong> {{ review.rating }} / 5</p>
                 </div>
             </div>
-        {% endfor %}
-    </div>
-    {% else %}
-        <div class="card mt-3">
-            <div class="card-body">
-                <p>⸺</p>
-            </div>
         </div>
-    {% endif %}
+    {% endfor %}
+</div>
+{% else %}
+    <div class="card mt-3">
+        <div class="card-body">
+            <p>No reviews yet.</p>
+        </div>
+    </div>
+{% endif %}
+
+<!-- Review Form -->
+<h3 class="mt-5">Submit Your Review</h3>
+<form method="POST" action="{% url 'tv_show_detail' show.id %}">
+    {% csrf_token %}
+    <!-- Rating stars -->
+    <div class="star-rating">
+        <input type="radio" id="star5" name="rating" value="5" />
+        <label for="star5" class="star">&#9733;</label>
+        <input type="radio" id="star4" name="rating" value="4" />
+        <label for="star4" class="star">&#9733;</label>
+        <input type="radio" id="star3" name="rating" value="3" />
+        <label for="star3" class="star">&#9733;</label>
+        <input type="radio" id="star2" name="rating" value="2" />
+        <label for="star2" class="star">&#9733;</label>
+        <input type="radio" id="star1" name="rating" value="1" />
+        <label for="star1" class="star">&#9733;</label>
+    </div>
+
+    <br>
+
+    <!-- Review text area -->
+    {{ form.review_text }}
+
+    <button type="submit" class="btn btn-primary">Submit Review</button>
+</form>
     
     <!-- Recommendations -->
     <h2 class="mt-5">Recommendations</h2>

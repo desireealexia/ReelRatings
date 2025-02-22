@@ -8,3 +8,22 @@ document.addEventListener("DOMContentLoaded", function () {
       toast.show();
     });
   });
+
+document.addEventListener('DOMContentLoaded', function () {
+  const stars = document.querySelectorAll('.star');
+  
+  stars.forEach(star => {
+      star.addEventListener('mouseover', function () {
+          this.style.color = 'gold';
+          let prevSibling = this.previousElementSibling;
+          while (prevSibling) {
+              prevSibling.style.color = 'gold';
+              prevSibling = prevSibling.previousElementSibling;
+          }
+      });
+      
+      star.addEventListener('mouseout', function () {
+          stars.forEach(s => s.style.color = '#ddd');
+      });
+  });
+});
