@@ -17,8 +17,15 @@
 
     <!-- Right Column: Overview, Details, and Recommendations -->
     <div class="col-md-8">
-      <p>{{ show.overview }}</p>
-
+      <!-- Overview -->
+      <p>{{ movie.overview|slice:":200" }}<span id="dots">...</span>
+      </span>
+      <span id="more-text" style="display:none;">{{ movie.overview }}</span>
+      </p>
+      <!-- Read More Button -->
+      <button id="read-more-btn" onclick="toggleText()">Read more</button>
+      
+      <!-- Details -->
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">Details</h5>
