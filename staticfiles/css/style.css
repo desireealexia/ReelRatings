@@ -1,24 +1,10 @@
-.star-rating {
-    display: inline-block;
-    direction: rtl; /* Ensures the stars are clickable from right to left */
-}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-.star {
-    font-size: 30px;
-    color: #ddd;
-    cursor: pointer;
-    transition: color 0.2s;
-}
-
-.star:hover,
-.star:focus {
-    color: gold;
-}
-
-input[type="radio"] {
-    display: none;
-}
-
-input[type="radio"]:checked ~ .star {
-    color: gold;
+h1 {
+    font-size: 100px;
+    color: blue;
 }

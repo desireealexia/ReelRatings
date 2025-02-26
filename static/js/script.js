@@ -9,21 +9,50 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-document.addEventListener('DOMContentLoaded', function () {
-  const stars = document.querySelectorAll('.star');
-  
-  stars.forEach(star => {
-      star.addEventListener('mouseover', function () {
-          this.style.color = 'gold';
-          let prevSibling = this.previousElementSibling;
-          while (prevSibling) {
-              prevSibling.style.color = 'gold';
-              prevSibling = prevSibling.previousElementSibling;
-          }
-      });
-      
-      star.addEventListener('mouseout', function () {
-          stars.forEach(s => s.style.color = '#ddd');
-      });
-  });
-});
+// To access the stars
+let stars = document.getElementsByClassName("star");
+let output = document.getElementById("output");
+let ratingInput = document.getElementById("ratingValue");
+ 
+// Function to update rating
+function setRating(n) {
+    remove();
+    for (let i = 0; i < n; i++) {
+        if (n == 1) cls = "one";
+        else if (n == 2) cls = "two";
+        else if (n == 3) cls = "three";
+        else if (n == 4) cls = "four";
+        else if (n == 5) cls = "five";
+        stars[i].className = "star " + cls;
+    }
+    output.innerText = "Rating is: " + n + "/5";
+    ratingInput.value = n;
+}
+ 
+// To remove the pre-applied styling
+function remove() {
+    let i = 0;
+    while (i < 5) {
+        stars[i].className = "star";
+        i++;
+    }
+}
+
+// Show more button
+function toggleText() {
+var dots = document.getElementById("dots");
+var moreText = document.getElementById("more-text");
+var btnText = document.getElementById("read-more-btn");
+
+if (dots.style.display === "none") {
+    // Show the truncated text
+    dots.style.display = "inline";
+    moreText.style.display = "none";
+    btnText.innerHTML = "Read more";
+} else {
+    // Show the full text
+    dots.style.display = "none";
+    moreText.style.display = "inline";
+    btnText.innerHTML = "Read less";
+}
+}

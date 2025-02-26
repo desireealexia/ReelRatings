@@ -1,24 +1,31 @@
-.star-rating {
-    display: inline-block;
-    direction: rtl; /* Ensures the stars are clickable from right to left */
-}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
 .star {
-    font-size: 30px;
-    color: #ddd;
-    cursor: pointer;
-    transition: color 0.2s;
+font-size: 2rem;
+color: gray;
+cursor: pointer;
 }
 
-.star:hover,
-.star:focus {
-    color: gold;
+.one {
+color: rgb(255, 0, 0);
 }
 
-input[type="radio"] {
-    display: none;
+.two {
+color: rgb(255, 106, 0);
 }
 
-input[type="radio"]:checked ~ .star {
-    color: gold;
+.three {
+color: rgb(251, 255, 120);
+}
+
+.four {
+color: rgb(255, 255, 0);
+}
+
+.five {
+color: rgb(24, 159, 14);
 }

@@ -1,92 +1,115 @@
-{% extends "base.html" %} 
-
-{% load static %}
-
-{% block title %}Popular Movies | ReelRatings{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% load static %} {% block title %}Popular Movies |
+ReelRatings{% endblock %} {% block content %}
 
 <!-- Hero Section with Search -->
 <section class="hero text-center py-5 bg-light">
-    <div class="container">
-        <h1 class="display-4">Welcome to ReelRatings</h1>
-        <p>Your ultimate source for movie and TV show reviews!</p>
-        <form action="{% url 'search_results' %}" method="GET" class="d-flex my-4">
-            <input type="text" name="q" class="form-control me-2" placeholder="Search for a movie or TV show..." required>
-            <button type="submit" class="btn btn-danger">Search</button>
-        </form>
-    </div>
+  <div class="container">
+    <h1 class="display-4">Welcome to ReelRatings</h1>
+    <p>Your ultimate source for movie and TV show reviews!</p>
+    <form action="{% url 'search_results' %}" method="GET" class="d-flex my-4">
+      <input
+        type="text"
+        name="q"
+        class="form-control me-2"
+        placeholder="Search for a movie or TV show..."
+        required
+      />
+      <button type="submit" class="btn btn-danger">Search</button>
+    </form>
+  </div>
 </section>
 
 <!-- Popular Movies Section -->
 <div class="container mt-4">
-<h2 class="text-center mt-5">Popular Movies</h2>
-<div class="row" id="content">
+  <h2 class="text-center mt-5">Popular Movies</h2>
+  <div class="row" id="content">
     {% for movie in movie_page_obj %}
-        <div class="col-md-3 mb-4">
-            <div class="card">
-                <a href="{% url 'movie_detail' movie.id %}">
-                    <img src="{{ movie.poster_url }}" class="card-img-top" alt="{{ movie.title }}">
-                </a>
-                <div class="card-body text-center">
-                    <h5 class="card-title">{{ movie.title }}</h5>
-                </div>
-            </div>
+    <div class="col-md-3 mb-4">
+      <div class="card">
+        <a href="{% url 'movie_detail' movie.id %}">
+          <img
+            src="{{ movie.poster_url }}"
+            class="card-img-top"
+            alt="{{ movie.title }}"
+          />
+        </a>
+        <div class="card-body text-center">
+          <h5 class="card-title">{{ movie.title }}</h5>
         </div>
+      </div>
+    </div>
     {% endfor %}
-</div>
+  </div>
 
-<!-- Pagination for Movies -->
-{% if movie_page_obj.has_other_pages %}
-<nav aria-label="Movies pagination">
+  <!-- Pagination for Movies -->
+  {% if movie_page_obj.has_other_pages %}
+  <nav aria-label="Movies pagination">
     <ul class="pagination justify-content-center">
-        {% if movie_page_obj.has_previous %}
-        <li class="page-item">
-            <a href="?movie_page={{ movie_page_obj.previous_page_number }}" class="page-link">&laquo; PREV</a>
-        </li>
-        {% endif %}
-        {% if movie_page_obj.has_next %}
-        <li class="page-item">
-            <a href="?movie_page={{ movie_page_obj.next_page_number }}" class="page-link">NEXT &raquo;</a>
-        </li>
-        {% endif %}
+      {% if movie_page_obj.has_previous %}
+      <li class="page-item">
+        <a
+          href="?movie_page={{ movie_page_obj.previous_page_number }}"
+          class="page-link"
+          >&laquo; PREV</a
+        >
+      </li>
+      {% endif %} {% if movie_page_obj.has_next %}
+      <li class="page-item">
+        <a
+          href="?movie_page={{ movie_page_obj.next_page_number }}"
+          class="page-link"
+          >NEXT &raquo;</a
+        >
+      </li>
+      {% endif %}
     </ul>
-</nav>
-{% endif %}
+  </nav>
+  {% endif %}
 
-<!-- Popular TV Shows Section -->
-<h2 class="text-center mt-5">Popular TV Shows</h2>
-<div class="row">
+  <!-- Popular TV Shows Section -->
+  <h2 class="text-center mt-5">Popular TV Shows</h2>
+  <div class="row">
     {% for tv_show in tv_show_page_obj %}
-        <div class="col-md-3 mb-4">
-            <div class="card">
-                <a href="{% url 'tv_show_detail' tv_show.id %}">
-                    <img src="{{ tv_show.poster_url }}" class="card-img-top" alt="{{ tv_show.name }}">
-                </a>
-                <div class="card-body text-center">
-                    <h5 class="card-title">{{ tv_show.name }}</h5>
-                </div>
-            </div>
+    <div class="col-md-3 mb-4">
+      <div class="card">
+        <a href="{% url 'tv_show_detail' tv_show.id %}">
+          <img
+            src="{{ tv_show.poster_url }}"
+            class="card-img-top"
+            alt="{{ tv_show.name }}"
+          />
+        </a>
+        <div class="card-body text-center">
+          <h5 class="card-title">{{ tv_show.name }}</h5>
         </div>
+      </div>
+    </div>
     {% endfor %}
-</div>
+  </div>
 
-<!-- Pagination for TV Shows -->
-{% if tv_show_page_obj.has_other_pages %}
-<nav aria-label="TV Shows pagination">
+  <!-- Pagination for TV Shows -->
+  {% if tv_show_page_obj.has_other_pages %}
+  <nav aria-label="TV Shows pagination">
     <ul class="pagination justify-content-center">
-        {% if tv_show_page_obj.has_previous %}
-        <li class="page-item">
-            <a href="?tv_show_page={{ tv_show_page_obj.previous_page_number }}" class="page-link">&laquo; PREV</a>
-        </li>
-        {% endif %}
-        {% if tv_show_page_obj.has_next %}
-        <li class="page-item">
-            <a href="?tv_show_page={{ tv_show_page_obj.next_page_number }}" class="page-link">NEXT &raquo;</a>
-        </li>
-        {% endif %}
+      {% if tv_show_page_obj.has_previous %}
+      <li class="page-item">
+        <a
+          href="?tv_show_page={{ tv_show_page_obj.previous_page_number }}"
+          class="page-link"
+          >&laquo; PREV</a
+        >
+      </li>
+      {% endif %} {% if tv_show_page_obj.has_next %}
+      <li class="page-item">
+        <a
+          href="?tv_show_page={{ tv_show_page_obj.next_page_number }}"
+          class="page-link"
+          >NEXT &raquo;</a
+        >
+      </li>
+      {% endif %}
     </ul>
-</nav>
-{% endif %}
+  </nav>
+  {% endif %}
 </div>
 {% endblock %}

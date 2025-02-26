@@ -1,181 +1,179 @@
-{% extends 'base.html' %}
-
-{% load static %}
-
-{% block title %}{{ movie.title }} | Movie Details{% endblock %}
-
+{% extends 'base.html' %} 
+{% load static %} 
+{% block title %} {{ movie.title }} | Movie Details {% endblock %} 
 {% block content %}
 <div class="container mt-4">
-    <h1 class="text-center">{{ movie.title }}</h1>
-    <div class="row">
-        <!-- Left Column: Movie Poster and Basic Details -->
-        <div class="col-md-4">
-            <img src="{% if movie.poster_path %}https://image.tmdb.org/t/p/w500{{ movie.poster_path }}{% else %}https://dummyimage.com/500x750/000000/ffffff&text=No+Image+Available{% endif %}" class="img-fluid rounded" alt="{{ movie.title }}">
-        </div>
+  <h1 class="text-center">{{ movie.title }}</h1>
+  <div class="row">
+    <!-- Left Column: Movie Poster -->
+    <div class="col-md-4">
+      <img
+        src="{% if movie.poster_path %}https://image.tmdb.org/t/p/w500{{ movie.poster_path }}{% else %}https://dummyimage.com/500x750/000000/ffffff&text=No+Image+Available{% endif %}"
+        class="img-fluid rounded"
+        alt="{{ movie.title }}"
+      />
+    </div>
 
-        <!-- Right Column: Overview, Details, and Recommendations -->
-        <div class="col-md-8">
-            <p>{{ movie.overview }}</p>
-            
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Details</h5>
-                    
-                    <!-- Runtime -->
-                    <p><strong>Runtime:</strong> {% if movie.runtime %} {{ movie.runtime }} mins {% else %} ⸺ {% endif %}</p>
+    <!-- Right Column: Overview, Details, Reviews and Recommendations -->
+    <div class="col-md-8">
+      <!-- Overview -->
+      <p>{{ movie.overview|slice:":200" }}<span id="dots">...</span>
+      </span>
+      <span id="more-text" style="display:none;">{{ movie.overview }}</span>
+      </p>
+      <!-- Read More Button -->
+      <button id="read-more-btn" onclick="toggleText()">Read more</button>
 
-                    <!-- Genres -->
-                    <p><strong>Genres:</strong> 
-                    {% if movie.genres %}
-                        {% for genre in movie.genres %}
-                            {{ genre.name }}{% if not loop.last %}, {% endif %}
-                        {% endfor %}
-                    {% else %}
-                        ⸺
-                    {% endif %}
-                    </p>
-
-                    <!-- Production Companies -->
-                    <p><strong>Production:</strong>
-                    {% if movie.production_companies %}
-                        {% for company in movie.production_companies %}
-                            {{ company.name }}{% if not loop.last %}, {% endif %}
-                        {% endfor %}
-                    {% else %}
-                        ⸺
-                    {% endif %}
-                    </p>
-
-                    <!-- Spoken Languages -->
-                    <p><strong>Spoken Languages:</strong> 
-                    {% if movie.spoken_languages %}
-                        {% for language in movie.spoken_languages %}
-                            {{ language.name }}{% if not loop.last %}, {% endif %}
-                        {% endfor %}
-                    {% else %}
-                        ⸺
-                    {% endif %}
-                    </p>
-                </div>
-            </div>
-            
-            <div class="card mt-3">
-                <div class="card-body">
-                    <!-- Vote Average and Tagline -->
-                    <div>
-                        <i class="fa fa-star" style="color: limegreen"></i>
-                        <strong style="font-size: 2rem; color: limegreen; font-weight: 900">{{ movie.vote_average }}/10</strong>
-                    </div>
-                    <h5 class="card-subtitle mb-2 text-muted">{{ movie.tagline }}</h5>
-                </div>
-            </div>
-
-    <!-- Cast and Crew Card -->
-    {% if cast %}
-        <div class="card mt-3">
-            <div class="card-body">
-                <h5>Cast</h5>
-                <ul>
-                    {% for member in cast %}
-                        <li>{{ member.name }}{% if member.character %} as {{ member.character }}{% endif %}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-    {% endif %}
-
-    {% if crew %}
-        <div class="card mt-3">
-            <div class="card-body">
-                <h5>Crew</h5>
-                <ul>
-                    {% for member in crew %}
-                        <li>{{ member.name }}{% if member.job %} - {{ member.job }}{% endif %}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-    {% endif %}
-
-    <!-- Trailers Card -->
-    {% for trailer in trailers %}
-        <div class="card mt-3">
-            <div class="card-body">
-                <h5>Trailer</h5>
-                <div class="embed-responsive embed-responsive-16by9">
-                    <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{ trailer.key }}" allowfullscreen></iframe>
-                </div>
-            </div>
-        </div>
-    {% endfor %}
-</div>
-</div>
-
-<!-- Reviews -->
-<h2 class="mt-5">Reviews</h2>
-{% if reviews %}
-<div class="row">
-    {% for review in reviews %}
-        <div class="col-md-4 mb-4">
-            <!-- Individual Review Card -->
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">{{ review.author }}</h5>
-                    <p class="card-text">{{ review.content }}</p>
-                </div>
-            </div>
-        </div>
-    {% endfor %}
-</div>
-{% else %}
-    <div class="card mt-3">
+      <!-- Details -->
+      <div class="card">
         <div class="card-body">
-            <p>No reviews yet.</p>
+          <h5 class="card-title">Details</h5>
+          <!-- Runtime -->
+          <p>
+            <strong>Runtime:</strong> 
+            {% if movie.runtime %} 
+            {{ movie.runtime }} minutes 
+            {% else %} No runtime available {% endif %}
+          </p>
+          <!-- Release Date -->
+          <p>
+            <strong>Release Date:</strong> 
+            {% if movie.release_date %} 
+            {{ movie.release_date }} 
+            {% else %} No release date available {% endif %}
+          </p>
+          <!-- Genres -->
+          <p>
+            <strong>Genres:</strong>
+            {% if movie.genres %} {% for genre in movie.genres %} 
+            {{ genre.name }}{% if not forloop.last %},{% endif %}
+            {% endfor %} 
+            {% else %} No genres available {% endif %}
+          </p>
+          <!-- Production Companies -->
+          <p>
+            <strong>Production:</strong>
+            {% if movie.production_companies %} {% for company in movie.production_companies %} 
+            {{ company.name }}{% if not forloop.last %},{% endif %}
+            {% endfor %} 
+            {% else %} No production company information available {% endif %}
+          </p>
+          <!-- Spoken Languages -->
+          <p>
+            <strong>Spoken Languages:</strong>
+            {% if movie.spoken_languages %} 
+            {% for language in movie.spoken_languages %}
+            {{ language.english_name }}{% if not forloop.last %},{% endif %}
+            {% endfor %}
+            {% else %} No languages available {% endif %}
+          </p>
+          <!-- Cast and Crew -->
+          <p>
+            <strong>Cast:</strong>
+            {% if movie.cast %} {% for cast_member in movie.cast %} 
+            {{ cast_member.name }} as {{ cast_member.character }}{% if not forloop.last %},{% endif %} 
+            {% empty %} No cast information available {% endfor %} 
+            {% else %} No cast information available {% endif %}
+          </p>
+          <p>
+            <strong>Directed by:</strong>
+            {% if movie.directors %} {% for director in movie.directors %} 
+            {{director.name }}{% if not forloop.last %},{% endif %} 
+            {% empty %} No directors information available {% endfor %} 
+            {% else %} No director information available {% endif %}
+          </p>
         </div>
-    </div>
-{% endif %}
+      </div>
 
-<!-- Review Form -->
-<h3 class="mt-5">Submit Your Review</h3>
-<form method="POST" action="{% url 'movie_detail' movie.id %}">
-    {% csrf_token %}
-    <!-- Rating stars -->
-    <div class="star-rating">
-        <input type="radio" id="star5" name="rating" value="5" />
-        <label for="star5" class="star">&#9733;</label>
-        <input type="radio" id="star4" name="rating" value="4" />
-        <label for="star4" class="star">&#9733;</label>
-        <input type="radio" id="star3" name="rating" value="3" />
-        <label for="star3" class="star">&#9733;</label>
-        <input type="radio" id="star2" name="rating" value="2" />
-        <label for="star2" class="star">&#9733;</label>
-        <input type="radio" id="star1" name="rating" value="1" />
-        <label for="star1" class="star">&#9733;</label>
+<!-- Vote Average and Tagline -->
+      <div class="card mt-3">
+        <div class="card-body">
+          <div>
+            <i class="fa fa-star" style="color: limegreen"></i>
+            <strong style="font-size: 2rem; color: limegreen; font-weight: 900"
+              >{{ movie.vote_average }}/10</strong
+            >
+          </div>
+          <h5 class="card-subtitle mb-2 text-muted">{{ movie.tagline }}</h5>
+        </div>
+      </div>
+      <!-- User interaction -->
+      <button>Add to Watchlist</button>
+      <button>Mark as Watched</button>
     </div>
+  </div>
 
-    <br>
-
-    <!-- Review text area -->
-    {{ form.review_text }}
-
-    <button type="submit" class="btn btn-primary">Submit Review</button>
-</form>
-    
-    <!-- Recommendations -->
-    <h2 class="mt-5">Recommendations</h2>
-    <div class="row">
-        {% for rec in recommendations %}
-            <div class="col-md-3">
-                <div class="card">
-                    <a href="{% url 'movie_detail' rec.id %}">
-                        <img src="https://image.tmdb.org/t/p/w500{{ rec.poster_path }}" class="card-img-top" alt="{{ rec.title }}">
-                    </a>
-                    <div class="card-body text-center">
-                        <h6 class="card-title">{{ rec.title }}</h6>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
+  <!-- Reviews -->
+  <h2 class="mt-5">Reviews ({{ reviews.count }})</h2>
+  {% if reviews %}
+  <div class="row">
+    {% for review in reviews %}
+    <div class="col-md-4 mb-4">
+      <!-- Individual Review Card -->
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{ review.user.username }}</h5>
+          <p class="card-text">
+            <strong>Rating:</strong> {{ review.rating }} / 5
+          </p>
+          <small>Reviewed on: {{ review.created_at }}</small>
+          <p class="card-text">{{ review.review_text }}</p>
+        </div>
+      </div>
     </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="card mt-3">
+    <div class="card-body">
+      <p>No reviews yet. Be the first to leave one!</p>
     </div>
+  </div>
+  {% endif %}
+  <!-- Review Form -->
+  <h3 class="mt-5">Submit Your Review</h3>
+  <div class="card mt-3">
+    <div class="card-body">
+      <form method="POST" action="{% url 'movie_detail' movie.id %}">
+        {% csrf_token %}
+        <div class="star-card">
+          <input type="hidden" id="ratingValue" name="rating" value="0" />
+
+          <span onclick="setRating(1)" class="star">★</span>
+          <span onclick="setRating(2)" class="star">★</span>
+          <span onclick="setRating(3)" class="star">★</span>
+          <span onclick="setRating(4)" class="star">★</span>
+          <span onclick="setRating(5)" class="star">★</span>
+
+          <h3 id="output">Rating is: 0/5</h3>
+        </div>
+        <br />
+        <!-- Review text area -->
+        {{ form.review_text }}
+        <button type="submit" class="btn btn-primary">Submit Review</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Recommendations -->
+  <h2 class="mt-5">Recommendations</h2>
+  <div class="row">
+    {% for rec in recommendations %}
+    <div class="col-md-3">
+      <div class="card">
+        <a href="{% url 'movie_detail' rec.id %}">
+          <img
+            src="https://image.tmdb.org/t/p/w500{{ rec.poster_path }}"
+            class="card-img-top"
+            alt="{{ rec.title }}"
+          />
+        </a>
+        <div class="card-body text-center">
+          <h6 class="card-title">{{ rec.title }}</h6>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
 {% endblock %}
