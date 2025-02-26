@@ -49,19 +49,27 @@ class MovieDetailView(View):
     def get(self, request, movie_id):
         movie = get_tmdb_data(f"movie/{movie_id}", {'language': 'en-US'})
         recommendations = get_tmdb_data(f"movie/{movie_id}/recommendations", {'language': 'en-US'}).get('results', [])
-        credits = get_tmdb_data(f"movie/{movie_id}/credits", {'language': 'en-US'})
+        movie_credits = get_tmdb_data(f"movie/{movie_id}/credits", {'language': 'en-US'})
         
-        # Extract cast and director information
-        cast = credits.get('cast', [])
-        directors = [member for member in credits.get('crew', []) if member['job'] == 'Director']
-                
         # Fetch user reviews for this movie
         reviews = Review.objects.filter(movie_id=movie_id).order_by("-created_at")
+        
+        if reviews.exists():
+            total_rating = sum([review.rating for review in reviews])
+            average_rating = total_rating / reviews.count()
+        else:
+            average_rating = 0
+        
+        # Extract cast and director information
+        cast = movie_credits.get('cast', [])
+        directors = [member for member in movie_credits.get('crew', []) if member['job'] == 'Director']
+                
         form = ReviewForm()
         
         context = {
             'movie': movie,
             'reviews': reviews,
+            'average_rating': average_rating,
             'recommendations': recommendations,
             'cast': cast,
             'directors': directors,
@@ -108,19 +116,27 @@ class TVShowDetailView(View):
     def get(self, request, series_id):
         show = get_tmdb_data(f"tv/{series_id}", {'language': 'en-US'})
         recommendations = get_tmdb_data(f"tv/{series_id}/recommendations", {'language': 'en-US'}).get('results', [])
-        credits = get_tmdb_data(f"movie/{series_id}/credits", {'language': 'en-US'})
+        show_credits = get_tmdb_data(f"movie/{series_id}/credits", {'language': 'en-US'})
 
-         # Extract cast and director information
-        cast = credits.get('cast', [])
-        directors = [member for member in credits.get('crew', []) if member['job'] == 'Director']
-        
-         # Fetch user reviews for this TV show
+        # Fetch user reviews for this TV show
         reviews = Review.objects.filter(tv_show_id=series_id).order_by("-created_at")
+        
+        if reviews.exists():
+            total_rating = sum([review.rating for review in reviews])
+            average_rating = total_rating / reviews.count()
+        else:
+            average_rating = 0
+            
+        # Extract cast and director information
+        cast = show_credits.get('cast', [])
+        directors = [member for member in show_credits.get('crew', []) if member['job'] == 'Director']
+        
         form = ReviewForm()
         
         context = {
             'show': show,
             'reviews': reviews,
+            'average_rating': average_rating,
             'recommendations': recommendations,
             'cast': cast,
             'directors': directors,

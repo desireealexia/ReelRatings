@@ -94,9 +94,14 @@
           <div>
             <i class="fa fa-star" style="color: limegreen"></i>
             <strong style="font-size: 2rem; color: limegreen; font-weight: 900"
-              >{{ movie.vote_average }}/10</strong
-            >
+              >{% if average_rating %}
+              {{ average_rating|floatformat:1 }} / 10
+          {% else %}
+              No ratings yet
+          {% endif %}
+        </strong>
           </div>
+          <br>
           <h5 class="card-subtitle mb-2 text-muted">{{ movie.tagline }}</h5>
         </div>
       </div>
