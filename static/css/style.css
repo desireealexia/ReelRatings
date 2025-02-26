@@ -1,8 +1,8 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 .star {
 font-size: 2rem;
@@ -28,4 +28,19 @@ color: rgb(255, 255, 0);
 
 .five {
 color: rgb(24, 159, 14);
+}
+
+#dots {
+  display: inline;
+}
+
+#more-text {
+  display: block;
+  margin-top: 0;
+}
+
+#overview-text, #dots, #more-text {
+  display: inline;
+  margin: 0;
+  padding: 0;
 }

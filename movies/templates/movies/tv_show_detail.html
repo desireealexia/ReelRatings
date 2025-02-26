@@ -1,7 +1,6 @@
 {% extends 'base.html' %} 
 {% load static %} 
-{% block title %}
-{{ show.name }} | TV Show Details {% endblock %} 
+{% block title %} {{ show.name }} | TV Show Details {% endblock %} 
 {% block content %}
 <div class="container mt-4">
   <h1 class="text-center">{{ show.name }}</h1>
@@ -17,14 +16,18 @@
 
     <!-- Right Column: Overview, Details, and Recommendations -->
     <div class="col-md-8">
-      <!-- Overview -->
-      <p>{{ show.overview|slice:":200" }}<span id="dots">...</span>
-      </span>
-      <span id="more-text" style="display:none;">{{ show.overview }}</span>
-      </p>
-      <!-- Read More Button -->
-      <button id="read-more-btn" onclick="toggleText()">Read more</button>
-      
+          <!-- Overview -->
+      {% if show.overview %}
+    <p>
+        <span id="overview-text">{{ show.overview|slice:":200" }}{% if show.overview|length > 200 %}<span id="dots">...</span><span id="more-text" style="display: none;">{{ show.overview|slice:"200:" }}</span>{% endif %}
+    </p>
+
+    {% if show.overview|length > 200 %}
+        <button id="read-more-btn" onclick="toggleText()">Read more</button>
+    {% endif %}
+{% endif %}
+
+
       <!-- Details -->
       <div class="card">
         <div class="card-body">
