@@ -1,3 +1,7 @@
+/* Fonts */
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
 /* General Styles */
 * {
   margin: 0;
@@ -6,7 +10,7 @@
 }
 
 body {
-  font-family: 'Noyh', sans-serif;
+  font-family: 'Roboto', serif;
   background-color: #fefefe;
   color: #616163;
   line-height: 1.6;
@@ -17,21 +21,7 @@ a {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Pontiac', sans-serif;
-}
-
-@font-face {
-  font-family: 'Pontiac';
-  src: url('static/fonts/Pontiac-Regular.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Noyh';
-  src: url('static/fonts/Noyh-Extra_Light.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
+  font-family: 'Montserrat', serif;
 }
 
 /* Hero Section */
@@ -44,7 +34,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .hero h1 {
   font-size: 3rem;
-  font-weight: 700;
+  font-weight: 400;
   margin-bottom: 20px;
 }
 
