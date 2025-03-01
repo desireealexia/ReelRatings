@@ -143,6 +143,8 @@ h1, h2, h3, h4, h5, h6 {
   background-color: #f3b743;
   color: #010101;
   border: none;
+  margin-right: 3px;
+
 }
 
 .page-item .page-link:hover {

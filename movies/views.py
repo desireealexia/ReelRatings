@@ -51,6 +51,10 @@ class MovieDetailView(View):
         recommendations = get_tmdb_data(f"movie/{movie_id}/recommendations", {'language': 'en-US'}).get('results', [])
         movie_credits = get_tmdb_data(f"movie/{movie_id}/credits", {'language': 'en-US'})
         
+        # Extract cast and director information
+        cast = movie_credits.get('cast', [])
+        directors = [member for member in movie_credits.get('crew', []) if member['job'] == 'Director']
+        
         # Fetch user reviews for this movie
         reviews = Review.objects.filter(movie_id=movie_id).order_by("-created_at")
         
@@ -60,17 +64,17 @@ class MovieDetailView(View):
         else:
             average_rating = 0
         
-        # Extract cast and director information
-        cast = movie_credits.get('cast', [])
-        directors = [member for member in movie_credits.get('crew', []) if member['job'] == 'Director']
-                
         form = ReviewForm()
+        
+        paginator = Paginator(recommendations, 4)  # Show 4 recommendations per page
+        page_number = request.GET.get('page')
+        recommendations_page = paginator.get_page(page_number)
         
         context = {
             'movie': movie,
             'reviews': reviews,
             'average_rating': average_rating,
-            'recommendations': recommendations,
+            'recommendations': recommendations_page,
             'cast': cast,
             'directors': directors,
             'form': form,
@@ -117,6 +121,10 @@ class TVShowDetailView(View):
         show = get_tmdb_data(f"tv/{series_id}", {'language': 'en-US'})
         recommendations = get_tmdb_data(f"tv/{series_id}/recommendations", {'language': 'en-US'}).get('results', [])
         show_credits = get_tmdb_data(f"movie/{series_id}/credits", {'language': 'en-US'})
+        
+        # Extract cast and director information
+        cast = show_credits.get('cast', [])
+        directors = [member for member in show_credits.get('crew', []) if member['job'] == 'Director']
 
         # Fetch user reviews for this TV show
         reviews = Review.objects.filter(tv_show_id=series_id).order_by("-created_at")
@@ -126,18 +134,18 @@ class TVShowDetailView(View):
             average_rating = total_rating / reviews.count()
         else:
             average_rating = 0
-            
-        # Extract cast and director information
-        cast = show_credits.get('cast', [])
-        directors = [member for member in show_credits.get('crew', []) if member['job'] == 'Director']
         
         form = ReviewForm()
+        
+        paginator = Paginator(recommendations, 4)  # Show 4 recommendations per page
+        page_number = request.GET.get('page')
+        recommendations_page = paginator.get_page(page_number)
         
         context = {
             'show': show,
             'reviews': reviews,
             'average_rating': average_rating,
-            'recommendations': recommendations,
+            'recommendations': recommendations_page,
             'cast': cast,
             'directors': directors,
             'form': form,
