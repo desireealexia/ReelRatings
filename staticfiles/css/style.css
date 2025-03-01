@@ -1,10 +1,86 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
+/* =======================================
+   Reset/Normalize
+   ======================================= */
 
-h1 {
-    font-size: 100px;
-    color: blue;
+/* Basic reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* =======================================
+   Global Styles
+   ======================================= */
+@font-face {
+  font-family: 'NoyhGeometric';
+  src: url('static\fonts\noyhgeometric-extralight.woff2') format('woff2');
+  font-weight: light;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Pontiac';
+  src: url('static\fonts\pontiac_regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Pontiac', sans-serif;
+}
+
+body {
+  font-family: 'NoyhGeometric', sans-serif;
+}
+
+/* =======================================
+   Color Palette
+   ======================================= */
+
+:root {
+--primary-color: #44aee2;
+--secondary-color: #f3b743;
+}
+  
+
+.star {
+font-size: 2rem;
+color: gray;
+cursor: pointer;
+}
+
+.one {
+color: rgb(255, 0, 0);
+}
+
+.two {
+color: rgb(255, 106, 0);
+}
+
+.three {
+color: rgb(251, 255, 120);
+}
+
+.four {
+color: rgb(255, 255, 0);
+}
+
+.five {
+color: rgb(24, 159, 14);
+}
+
+#dots {
+  display: inline;
+}
+
+#more-text {
+  display: block;
+  margin-top: 0;
+}
+
+#overview-text, #dots, #more-text {
+  display: inline;
+  margin: 0;
+  padding: 0;
 }

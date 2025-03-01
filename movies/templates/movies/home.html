@@ -1,8 +1,10 @@
-{% extends "base.html" %} {% load static %} {% block title %}Popular Movies |
-ReelRatings{% endblock %} {% block content %}
+{% extends "base.html" %} 
+{% load static %} 
+{% block title %} Popular Movies | ReelRatings {% endblock %} 
+{% block content %}
 
 <!-- Hero Section with Search -->
-<section class="hero text-center py-5 bg-light">
+<section class="hero text-center py-5">
   <div class="container">
     <h1 class="display-4">Welcome to ReelRatings</h1>
     <p>Your ultimate source for movie and TV show reviews!</p>
@@ -14,7 +16,7 @@ ReelRatings{% endblock %} {% block content %}
         placeholder="Search for a movie or TV show..."
         required
       />
-      <button type="submit" class="btn btn-danger">Search</button>
+      <button type="submit" class=" btn search-btn">Search</button>
     </form>
   </div>
 </section>
@@ -22,10 +24,10 @@ ReelRatings{% endblock %} {% block content %}
 <!-- Popular Movies Section -->
 <div class="container mt-4">
   <h2 class="text-center mt-5">Popular Movies</h2>
-  <div class="row" id="content">
+  <div class="row popular-movies">
     {% for movie in movie_page_obj %}
-    <div class="col-md-3 mb-4">
-      <div class="card">
+    <div class="col-12 col-sm-6 col-lg-3  mt-4 mb-4">
+      <div class="card card-item">
         <a href="{% url 'movie_detail' movie.id %}">
           <img
             src="{{ movie.poster_url }}"
@@ -34,7 +36,7 @@ ReelRatings{% endblock %} {% block content %}
           />
         </a>
         <div class="card-body text-center">
-          <h5 class="card-title">{{ movie.title }}</h5>
+          <h6 class="card-title">{{ movie.title }}</h6>
         </div>
       </div>
     </div>
@@ -68,10 +70,10 @@ ReelRatings{% endblock %} {% block content %}
 
   <!-- Popular TV Shows Section -->
   <h2 class="text-center mt-5">Popular TV Shows</h2>
-  <div class="row">
+  <div class="row popular-shows">
     {% for tv_show in tv_show_page_obj %}
-    <div class="col-md-3 mb-4">
-      <div class="card">
+    <div class="col-12 col-sm-6 col-lg-3 mt-4 mb-4">
+      <div class="card card-item">
         <a href="{% url 'tv_show_detail' tv_show.id %}">
           <img
             src="{{ tv_show.poster_url }}"
@@ -80,7 +82,7 @@ ReelRatings{% endblock %} {% block content %}
           />
         </a>
         <div class="card-body text-center">
-          <h5 class="card-title">{{ tv_show.name }}</h5>
+          <h6 class="card-title">{{ tv_show.name }}</h6>
         </div>
       </div>
     </div>

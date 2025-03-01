@@ -1,9 +1,229 @@
+/* General Styles */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+body {
+  font-family: 'Noyh', sans-serif;
+  background-color: #fefefe;
+  color: #616163;
+  line-height: 1.6;
+}
+
+a {
+  text-decoration: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Pontiac', sans-serif;
+}
+
+@font-face {
+  font-family: 'Pontiac';
+  src: url('static/fonts/Pontiac-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Noyh';
+  src: url('static/fonts/Noyh-Extra_Light.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Hero Section */
+.hero {
+  background-color: #44aee2;
+  color: white;
+  padding: 80px 0;
+  margin-bottom: 40px;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.hero p {
+  font-size: 1.25rem;
+  margin-bottom: 30px;
+}
+
+.hero .search-btn {
+  background-color: #ed3833;
+  color: white;
+  border: none;
+  font-size: 1rem;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+
+.hero .search-btn:hover {
+  background-color: #f3b743;
+}
+
+/* Navbar */
+.navbar {
+  background-color: #010101;
+}
+
+.navbar .navbar-brand img {
+  width: 100px;
+}
+
+.navbar-nav .nav-link {
+  color: white;
+  font-weight: 700;
+}
+
+.navbar-nav .nav-link:hover {
+  color: #f3b743;
+}
+
+.navbar-nav .nav-link.active {
+  color: #f3b743;
+}
+
+/* Card Styles for Movies and TV Shows */
+.card-item {
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
+
+}
+
+.card-item:hover {
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  transform: scale(1.05);
+}
+
+.card-item img {
+  height: 416px;
+  border-bottom: 2px solid #44aee2;
+  object-fit: cover;
+}
+
+.popular-movies .card-body,
+.popular-shows .card-body,
+.recommendations .card-body {
+  height: 100px;
+}
+
+.search-results .card-body {
+  height: 240px;
+}
+
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #010101;
+  margin-top: 10px;
+}
+
+.search-results a {
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 20px;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.page-item .page-link {
+  background-color: #f3b743;
+  color: #010101;
+  border: none;
+}
+
+.page-item .page-link:hover {
+  background-color: #ed3833;
+  color: white;
+}
+
+.page-item.active .page-link {
+  background-color: #44aee2;
+  color: white;
+}
+
+/* Footer */
+.footer {
+  background-color: #010101;
+  padding: 20px 0;
+}
+
+.footer p {
+  font-size: 1rem;
+  color: white;
+  margin: 0;
+}
+
+/* Breadcrumb */
+.breadcrumb-item a {
+  color: #44aee2;
+}
+
+.breadcrumb-item a:hover {
+  text-decoration: underline;
+}
+
+/* Toast Notifications */
+.toast {
+  border-radius: 10px;
+  padding: 15px;
+  color: white;
+  font-weight: 600;
+}
+
+.toast-header {
+  background-color: #44aee2;
+  color: white;
+}
+
+.toast-body {
+  background-color: #616163;
+}
+
+/* Forms */
+.form-control {
+  border-radius: 5px;
+  border: 2px solid #616163;
+}
+
+.form-control:focus {
+  border-color: #ed3833;
+}
+
+select.form-control {
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: #44aee2;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #ed3833;
+  color: white;
+}
+
+.vote-average {
+  font-size: 32px;
+  color: #ed3833;
+  font-weight: 900;
+}
+
+/* Review section */
 .star {
 font-size: 2rem;
 color: gray;
@@ -30,17 +250,124 @@ color: rgb(255, 255, 0);
 color: rgb(24, 159, 14);
 }
 
-#dots {
-  display: inline;
+/* Authentication pages (login, logout, signup) */
+
+/* Centring and Card Styling */
+.auth-container {
+  min-height: 80vh;
 }
 
-#more-text {
-  display: block;
-  margin-top: 0;
+.auth-card {
+  margin: 30px;
 }
 
-#overview-text, #dots, #more-text {
-  display: inline;
-  margin: 0;
-  padding: 0;
+/* Form Elements */
+form input[type="text"].login,
+form input[type="text"].signup,
+form input[type="email"],
+form input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: #ed3833;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #c82f2a;
+}
+
+.btn-success {
+  background-color: #44aee2;
+  border: none;
+}
+
+.btn-success:hover {
+  background-color: #3095c9;
+}
+
+.btn-danger {
+  background-color: #f3b743;
+  border: none;
+  color: #000;
+}
+
+.btn-danger:hover {
+  background-color: #d69e3a;
+}
+
+.btn-outline-secondary {
+  border-color: #616163;
+  color: #616163;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #616163;
+  color: #fff;
+}
+
+/* Links */
+.auth-card a {
+  color: #44aee2;
+  text-decoration: none;
+}
+
+.auth-card a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .hero {
+      padding: 60px 0;
+  }
+
+  .hero h1 {
+      font-size: 2rem;
+  }
+
+  .card-item {
+      margin-bottom: 30px;
+  }
+
+  .popular-movies,
+  .popular-shows {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 10px;
+  }
+
+  .popular-movies .col-6,
+  .popular-shows .col-6 {
+    flex: 0 0 auto;
+    width: 45%; 
+  }
+}
+
+@media (max-width: 576px) {
+  .card-item {
+    margin-bottom: 20px;
+  }
+
+  .popular-movies,
+  .popular-shows {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 10px;
+  }
+
+  .popular-movies .col-6,
+  .popular-shows .col-6,
+  .recommendations .col-6 {
+    flex: 0 0 auto;
+    width: 45%; 
+  }
 }

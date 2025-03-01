@@ -184,15 +184,15 @@ class SearchResultsView(View):
         query = request.GET.get('q', '')  # Get search query
         genre_filter = request.GET.get('genre', '')  # Get genre filter
         sort_by = request.GET.get('sort', 'popularity.desc')  # Default sort by popularity
+        page_number = request.GET.get('page', 1) # Get page number from query params
 
         params = {
             'query': query,
             'language': 'en-US',
-            'page': 1,
+            'page': page_number,
         }
 
         search_results = get_tmdb_data('search/multi', params=params)
-        
         results_list = search_results.get("results", [])
         
         # Apply genre filter
@@ -213,13 +213,17 @@ class SearchResultsView(View):
         elif sort_by == 'title':
             filtered_results = sorted(filtered_results, key=lambda x: x.get('title', '').lower())
 
+        # Paginate the filtered results
+        paginator = Paginator(filtered_results, 12)  # 10 results per page
+        page_obj = paginator.get_page(page_number)
+        
         context = {
-            'results': filtered_results,
+            'results': page_obj,
             'query': query,
             'genres': get_tmdb_data('genre/movie/list', {'language': 'en-US'})['genres'],
             'tv_genres': get_tmdb_data('genre/tv/list', {'language': 'en-US'})['genres'],
             'selected_genre': genre_filter,
-            'selected_sort': sort_by
+            'selected_sort': sort_by,
         }
 
         return render(request, 'movies/search_results.html', context)

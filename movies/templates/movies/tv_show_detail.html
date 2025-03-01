@@ -16,16 +16,14 @@
 
     <!-- Right Column: Overview, Details, and Recommendations -->
     <div class="col-md-8">
-          <!-- Overview -->
+      <!-- Overview -->
       {% if show.overview %}
     <p>
-        <span id="overview-text">{{ show.overview|slice:":200" }}{% if show.overview|length > 200 %}<span id="dots">...</span><span id="more-text" style="display: none;">{{ show.overview|slice:"200:" }}</span>{% endif %}
+        <span id="overview-text">{{ show.overview|slice:":200" }}{% if show.overview|length > 200 %}<span id="dots">...</span><span id="more-text" style="display: none;">{{ show.overview|slice:"200:" }}</span>{% endif %}{% if show.overview|length > 200 %}
+        <a href="javascript:void(0)" id="read-more-btn" onclick="toggleText()">Read more</a>
     </p>
-
-    {% if show.overview|length > 200 %}
-        <button id="read-more-btn" onclick="toggleText()">Read more</button>
     {% endif %}
-{% endif %}
+    {% endif %}
 
 
       <!-- Details -->
@@ -112,13 +110,13 @@
         </div>
       </div>
 
+<!-- Vote Average and Tag line -->
       <div class="card mt-3">
         <div class="card-body">
           <!-- Vote Average -->
-          <div>
-            <i class="fa fa-star" style="color: limegreen"></i>
-            <strong style="font-size: 2rem; color: limegreen; font-weight: 900"
-              >{% if average_rating %}
+          <div class="vote-average">
+            <i class="fa fa-star"></i>
+            <strong>{% if average_rating %}
               {{ average_rating|floatformat:1 }} / 10
           {% else %}
               No ratings yet
@@ -128,10 +126,6 @@
           <h5 class="card-subtitle mb-2 text-muted">{{ show.tagline }}</h5>
         </div>
       </div>
-
-      <!-- User interaction -->
-      <button>Add to Watchlist</button>
-      <button>Mark as Watched</button>
     </div>
   </div>
 
@@ -143,7 +137,7 @@
     <div class="col-md-4 mb-4">
       <!-- Individual Review Card -->
       <div class="card">
-        <div class="card-body">
+        <div class="rating-card-body">
           <h5 class="card-title">{{ review.user.username }}</h5>
           <p class="card-text">
             <strong>Rating:</strong> {{ review.rating }} / 5
@@ -166,7 +160,7 @@
   <!-- Review Form -->
   <h3 class="mt-5">Submit Your Review</h3>
   <div class="card mt-3">
-    <div class="card-body">
+    <div class="review-card-body">
       <form method="POST" action="{% url 'tv_show_detail' show.id %}">
         {% csrf_token %}
         <div class="star-card">
@@ -190,10 +184,10 @@
 
   <!-- Recommendations -->
   <h2 class="mt-5">Recommendations</h2>
-  <div class="row">
+  <div class="row recommendations">
     {% for rec in recommendations %}
-    <div class="col-md-3">
-      <div class="card">
+    <div class="col-md-3 mt-2 mb-2">
+      <div class="card card-item">
         <a href="{% url 'tv_show_detail' rec.id %}">
           <img
             src="https://image.tmdb.org/t/p/w500{{ rec.poster_path }}"
