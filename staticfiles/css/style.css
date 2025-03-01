@@ -2,6 +2,17 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
+/* Colours */
+
+:root {
+  --vermillion: #ed3833;
+  --xanthous: #f3b743;
+  --dim-gray: #616163;
+  --black: #010101;
+  --white: #fefefe;
+  --picton-blue: #44aee2;
+}
+
 /* General Styles */
 * {
   margin: 0;
@@ -11,8 +22,8 @@
 
 body {
   font-family: 'Roboto', serif;
-  background-color: #fefefe;
-  color: #616163;
+  background-color: var(--white);
+  color: var(--dim-gray);
   line-height: 1.6;
 }
 
@@ -26,8 +37,8 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Hero Section */
 .hero {
-  background-color: #44aee2;
-  color: white;
+  background-color: var(--picton-blue);
+  color: var(--white);
   padding: 80px 0;
   margin-bottom: 40px;
 }
@@ -44,8 +55,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .hero .search-btn {
-  background-color: #ed3833;
-  color: white;
+  background-color: var(--vermillion);
+  color: var(--white);
   border: none;
   font-size: 1rem;
   padding: 10px 20px;
@@ -53,12 +64,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .hero .search-btn:hover {
-  background-color: #f3b743;
+  background-color: var(--xanthous);
 }
 
 /* Navbar */
 .navbar {
-  background-color: #010101;
+  background-color: var(--black);
 }
 
 .navbar .navbar-brand img {
@@ -66,17 +77,16 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .navbar-nav .nav-link {
-  color: white;
+  color: var(--white);
   font-weight: 700;
 }
 
 .navbar-nav .nav-link:hover {
-  color: #f3b743;
+  color: var(--xanthous);
 }
 
 .navbar-nav .nav-link.active {
-  color: #f3b743;
-}
+  color: var(--xanthous)}
 
 /* Card Styles for Movies and TV Shows */
 .card-item {
@@ -95,7 +105,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .card-item img {
   height: 416px;
-  border-bottom: 2px solid #44aee2;
+  border-bottom: 2px solid var(--picton-blue);
   object-fit: cover;
 }
 
@@ -112,7 +122,7 @@ h1, h2, h3, h4, h5, h6 {
 .card-title {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #010101;
+  color: var(--black);
   margin-top: 10px;
 }
 
@@ -130,38 +140,38 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .page-item .page-link {
-  background-color: #f3b743;
-  color: #010101;
+  background-color: var(--xanthous);
+  color: var(--black);
   border: none;
   margin-right: 3px;
 
 }
 
 .page-item .page-link:hover {
-  background-color: #ed3833;
-  color: white;
+  background-color: var(--vermillion);
+  color: var(--white);
 }
 
 .page-item.active .page-link {
-  background-color: #44aee2;
-  color: white;
+  background-color: var(--picton-blue);
+  color: var(--white);
 }
 
 /* Footer */
 .footer {
-  background-color: #010101;
+  background-color:var(--black);
   padding: 20px 0;
 }
 
 .footer p {
   font-size: 1rem;
-  color: white;
+  color: var(--white);
   margin: 0;
 }
 
 /* Breadcrumb */
 .breadcrumb-item a {
-  color: #44aee2;
+  color: var(--picton-blue);
 }
 
 .breadcrumb-item a:hover {
@@ -172,27 +182,27 @@ h1, h2, h3, h4, h5, h6 {
 .toast {
   border-radius: 10px;
   padding: 15px;
-  color: white;
+  color: var(--white);
   font-weight: 600;
 }
 
 .toast-header {
-  background-color: #44aee2;
-  color: white;
+  background-color: var(--picton-blue);
+  color: var(--white);
 }
 
 .toast-body {
-  background-color: #616163;
+  background-color: var(--dim-gray);
 }
 
 /* Forms */
 .form-control {
   border-radius: 5px;
-  border: 2px solid #616163;
+  border: 2px solid var(--dim-gray);
 }
 
 .form-control:focus {
-  border-color: #ed3833;
+  border-color: var(--vermillion);
 }
 
 select.form-control {
@@ -200,25 +210,25 @@ select.form-control {
 }
 
 .btn-primary {
-  background-color: #44aee2;
+  background-color: var(--picton-blue);
   border: none;
 }
 
 .btn-primary:hover {
-  background-color: #ed3833;
-  color: white;
+  background-color: var(--vermillion);
+  color: var(--white);
 }
 
 .vote-average {
   font-size: 32px;
-  color: #ed3833;
+  color: var(--vermillion);
   font-weight: 900;
 }
 
 /* Review section */
 .star {
 font-size: 2rem;
-color: gray;
+color: var(--dim-gray);
 cursor: pointer;
 }
 
@@ -254,59 +264,60 @@ color: rgb(24, 159, 14);
 }
 
 /* Form Elements */
-form input[type="text"].login,
-form input[type="text"].signup,
+.login form input[type="text"],
+#id_username,
+#id_login,
 form input[type="email"],
 form input[type="password"] {
   width: 100%;
   padding: 10px;
   margin-top: 5px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--dim-gray);
   border-radius: 6px;
 }
 
 /* Buttons */
 .btn-primary {
-  background-color: #ed3833;
+  background-color: var(--vermillion);
   border: none;
 }
 
 .btn-primary:hover {
-  background-color: #c82f2a;
+  background-color: var(--vermillion);
 }
 
 .btn-success {
-  background-color: #44aee2;
+  background-color: var(--picton-blue);
   border: none;
 }
 
 .btn-success:hover {
-  background-color: #3095c9;
+  background-color: var(--picton-blue);
 }
 
 .btn-danger {
-  background-color: #f3b743;
+  background-color: var(--xanthous);
   border: none;
-  color: #000;
+  color: var(--black);
 }
 
 .btn-danger:hover {
-  background-color: #d69e3a;
+  background-color: var(--xanthous);
 }
 
 .btn-outline-secondary {
-  border-color: #616163;
-  color: #616163;
+  border-color: var(--dim-gray);
+  color: var(--dim-gray);
 }
 
 .btn-outline-secondary:hover {
-  background-color: #616163;
-  color: #fff;
+  background-color: var(--dim-gray);
+  color: var(--white);
 }
 
 /* Links */
 .auth-card a {
-  color: #44aee2;
+  color: var(--picton-blue);
   text-decoration: none;
 }
 
