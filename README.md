@@ -175,14 +175,15 @@ The colour palette for ReelRatings includes:
 - **White**: #fefefeff (for clean backgrounds and contrast)
 - **Picton-Blue**: #44aee2ff (for links and secondary elements)
 
+![ReelRatings Colour Palette](readme_documentation/palette/reelratings_palette.png)
+
+
 ### Typography
 
-The font choices for ReelRatings are:
-- **Primary Font**: **Pontiac Sans Serif Font** – A clean and modern sans-serif font, used for headings and larger text. It gives the site a bold and contemporary feel.
-- **Secondary Font**: **Noyh Geometric Sans Serif Font** – A geometric sans-serif font, used for body text and general content. It provides excellent readability and complements the primary font nicely.
-- **Font Sizes**: Adjusted for clarity and readability on all devices:
-  - Headings: 36px for H1, 28px for H2, etc.
-  - Body Text: 16px for general text
+The ReelRatings project uses *Montserrat* and *Roboto* to enhance readability, accessibility, and the overall aesthetic of the platform.
+
+- **Primary Font**: **Montserrat** – Used for headings, buttons, and key UI elements, Montserrat adds a bold and modern feel to the project. Its geometric and structured letterforms create a strong visual presence, making titles and important content stand out. The font helps establish a clean and professional look, reinforcing the project's branding.
+- **Secondary Font**: **Roboto** – Used for body text and descriptions, Roboto provides excellent readability with its natural and friendly appearance. Its open curves and balanced letter spacing ensure that users can comfortably read reviews, movie descriptions, and other text-heavy content across different devices. Roboto adds a smooth, user-friendly experience without distracting from the primary content.
 
 ### Imagery
 
@@ -197,7 +198,7 @@ Additionally, the **ReelRatings logo** was designed to represent the brand's ide
 
 You can view the logo below:
 
-![ReelRatings Logo](static\images\logo.png)
+![ReelRatings Logo](static/images/logo.png)
 
 ## Wireframes
 
@@ -214,7 +215,7 @@ Include images of the wireframes for the main pages of the app (login, search re
 
 ReelRatings uses a relational database to store user accounts, reviews, and watchlists. Below is the **Entity-Relationship Diagram (ERD)** representing the database structure:
 
-![ERD Diagram](readme_documentation\erd\reelratings-erd.png)
+![ERD Diagram](readme_documentation/erd/reelratings-erd.png)
 
 ## Tables
 

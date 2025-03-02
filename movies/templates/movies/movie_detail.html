@@ -68,19 +68,19 @@
             {% endfor %}
             {% else %} No languages available {% endif %}
           </p>
-          <!-- Cast and Crew -->
+          <!-- Cast and Director -->
           <p>
             <strong>Cast:</strong>
-            {% if movie.cast %} {% for cast_member in movie.cast %} 
-            {{ cast_member.name }} as {{ cast_member.character }}{% if not forloop.last %},{% endif %} 
-            {% empty %} No cast information available {% endfor %} 
+            {% if movie.cast %} {% for actor in movie.cast %} 
+            {{ actor.name }} as {{ actor.character }}{% if not forloop.last %},{% endif %} 
+            {% endfor %} 
             {% else %} No cast information available {% endif %}
           </p>
           <p>
             <strong>Directed by:</strong>
-            {% if movie.directors %} {% for director in movie.directors %} 
-            {{director.name }}{% if not forloop.last %},{% endif %} 
-            {% empty %} No directors information available {% endfor %} 
+            {% if directors %} {% for director in directors %} 
+            {{director }}{% if not forloop.last %},{% endif %} 
+            {% endfor %} 
             {% else %} No director information available {% endif %}
           </p>
         </div>

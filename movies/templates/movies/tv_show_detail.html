@@ -91,21 +91,13 @@
             {% else %} No languages available {% endif %}
           </p>
 
-          <!-- Cast and Crew -->
+          <!-- Cast -->
           <p>
             <strong>Cast:</strong>
             {% if show.cast %} {% for cast_member in show.cast %} 
             {{ cast_member.name }} as {{ cast_member.character }}{% if not forloop.last %},{% endif %} 
-            {% empty %} No cast information available {% endfor %} 
+            {% endfor %} 
             {% else %} No cast information available {% endif %}
-          </p>
-
-          <p>
-            <strong>Directed by:</strong>
-            {% if show.directors %} {% for director in show.directors %} 
-            {{director.name }}{% if not forloop.last %},{% endif %} 
-            {% empty %} No directors information available {% endfor %} 
-            {% else %} No director information available {% endif %}
           </p>
         </div>
       </div>

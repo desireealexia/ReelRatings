@@ -1,14 +1,13 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import messages
-from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.views import View
 from .models import Review, User
 from .forms import ReviewForm
-from .utils import get_tmdb_data
+from .utils import get_tmdb_data, get_movie_details, get_tv_show_details
 
 urlpatterns = [
     # Your app URLs
@@ -47,26 +46,23 @@ class HomePageView(View):
 
 class MovieDetailView(View):
     def get(self, request, movie_id):
-        movie = get_tmdb_data(f"movie/{movie_id}", {'language': 'en-US'})
+        movie = get_movie_details(movie_id)
         recommendations = get_tmdb_data(f"movie/{movie_id}/recommendations", {'language': 'en-US'}).get('results', [])
-        movie_credits = get_tmdb_data(f"movie/{movie_id}/credits", {'language': 'en-US'})
-        
-        # Extract cast and director information
-        cast = movie_credits.get('cast', [])
-        directors = [member for member in movie_credits.get('crew', []) if member['job'] == 'Director']
         
         # Fetch user reviews for this movie
         reviews = Review.objects.filter(movie_id=movie_id).order_by("-created_at")
         
+        form = ReviewForm()
+        
+        # Calculate average rating
         if reviews.exists():
             total_rating = sum([review.rating for review in reviews])
             average_rating = total_rating / reviews.count()
         else:
             average_rating = 0
         
-        form = ReviewForm()
-        
-        paginator = Paginator(recommendations, 4)  # Show 4 recommendations per page
+        # Paginate for recommendations section (4 per page)
+        paginator = Paginator(recommendations, 4) 
         page_number = request.GET.get('page')
         recommendations_page = paginator.get_page(page_number)
         
@@ -75,8 +71,8 @@ class MovieDetailView(View):
             'reviews': reviews,
             'average_rating': average_rating,
             'recommendations': recommendations_page,
-            'cast': cast,
-            'directors': directors,
+            "cast": movie.get("cast", []),
+            "directors": movie.get("directors", []),
             'form': form,
         }
         
@@ -88,16 +84,15 @@ class MovieDetailView(View):
             return redirect('account_login')   # Redirect to login if user is not authenticated
 
         # Fetch movie details from TMDb API
-        movie_data = get_tmdb_data(f'movie/{movie_id}', {'language': 'en-US'})
-        movie_title = movie_data.get('title', '')
+        movie = get_tmdb_data(movie_id)
+        movie_title = movie.get('title', '')
 
         # Process the review form submission
         form = ReviewForm(request.POST)
         if form.is_valid():
             review = form.save(commit=False)
-            user = request.user
             if isinstance(request.user, User):
-                review.user = user
+                review.user = request.user
             else:
                 return redirect('account_login')  # Redirect if user is not valid
             review.movie_id = movie_id
@@ -108,7 +103,7 @@ class MovieDetailView(View):
             return redirect('movie_detail', movie_id=movie_id)
 
         context = {
-            'movie': movie_data,
+            'movie': movie,
             'reviews': Review.objects.filter(movie_id=movie_id).order_by('created_at'),
             'recommendations': get_tmdb_data(f"movie/{movie_id}/recommendations", {'language': 'en-US'}).get('results', []),
             'form': form,
@@ -118,26 +113,23 @@ class MovieDetailView(View):
     
 class TVShowDetailView(View):
     def get(self, request, series_id):
-        show = get_tmdb_data(f"tv/{series_id}", {'language': 'en-US'})
+        show = get_tv_show_details(series_id)
         recommendations = get_tmdb_data(f"tv/{series_id}/recommendations", {'language': 'en-US'}).get('results', [])
-        show_credits = get_tmdb_data(f"movie/{series_id}/credits", {'language': 'en-US'})
-        
-        # Extract cast and director information
-        cast = show_credits.get('cast', [])
-        directors = [member for member in show_credits.get('crew', []) if member['job'] == 'Director']
 
         # Fetch user reviews for this TV show
         reviews = Review.objects.filter(tv_show_id=series_id).order_by("-created_at")
         
+        form = ReviewForm()
+        
+        # Calculate average rating
         if reviews.exists():
             total_rating = sum([review.rating for review in reviews])
             average_rating = total_rating / reviews.count()
         else:
             average_rating = 0
         
-        form = ReviewForm()
-        
-        paginator = Paginator(recommendations, 4)  # Show 4 recommendations per page
+        # Paginate for recommendations section (4 per page)        
+        paginator = Paginator(recommendations, 4)
         page_number = request.GET.get('page')
         recommendations_page = paginator.get_page(page_number)
         
@@ -146,8 +138,7 @@ class TVShowDetailView(View):
             'reviews': reviews,
             'average_rating': average_rating,
             'recommendations': recommendations_page,
-            'cast': cast,
-            'directors': directors,
+            "cast": show.get("cast", []),
             'form': form,
         }
         
@@ -159,16 +150,15 @@ class TVShowDetailView(View):
             return redirect('account_login')   # Redirect to login if user is not authenticated
 
         # Fetch TV show details from TMDb API
-        show_data = get_tmdb_data(f'tv/{series_id}', {'language': 'en-US'})
-        show_title = show_data.get('name', '') 
+        show = get_tmdb_data(series_id)
+        show_title = show.get('name', '') 
         
         # Process the review form submission
         form = ReviewForm(request.POST)
         if form.is_valid():
             review = form.save(commit=False)
-            user = request.user
-            if isinstance(user, User):
-                review.user = user
+            if isinstance(request.user, User):
+                review.user = request.user
             else:
                 return redirect('account_login')  # Redirect if user is not valid
             review.tv_show_id = series_id
@@ -176,10 +166,10 @@ class TVShowDetailView(View):
             review.save() 
             
             messages.success(request, 'Your review has been submitted.')
-            return redirect('tv_show_detail', series_id=series_id)
+            return redirect('tv_show_detail', tv_show_id=series_id)
 
         context = {
-            'show': show_data,
+            'show': show,
             'reviews': Review.objects.filter(tv_show_id=series_id).order_by("-created_at"),
             'recommendations': get_tmdb_data(f"tv/{series_id}/recommendations", {'language': 'en-US'}).get('results', []),
             'form': form,
