@@ -1,18 +1,7 @@
 from django.db import models
-from django.core.validators import MaxValueValidator, MinValueValidator
-from django.utils.text import slugify
+from django.contrib.auth.models import User
 
 # Create your models here.
-class User(models.Model):
-    user_id = models.AutoField(primary_key=True)
-    username = models.CharField(max_length=200, unique=True)
-    email = models.EmailField(unique=True)
-    password = models.CharField(max_length=200)
-    date_joined = models.DateTimeField(auto_now_add=True)
-    
-    class Meta:
-        ordering = ["-date_joined"] 
-    
 class Review(models.Model):
     review_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -20,10 +9,13 @@ class Review(models.Model):
     tv_show_id = models.IntegerField(null=True, blank=True)
     movie_title = models.CharField(max_length=255, null=True, blank=True) 
     tv_show_title = models.CharField(max_length=255, null=True, blank=True)
-    rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    rating = models.IntegerField(choices=[(i, i) for i in range(1,6)])
     review_text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     
+    class Meta:
+        unique_together = ('movie_id', 'user')
+        
     def __str__(self):
         if self.movie_id:
             return f"Review by {self.user.username} for '{self.movie_title}'"
@@ -34,7 +26,7 @@ class Review(models.Model):
     
 class Watchlist(models.Model):
     watchlist_id = models.AutoField(primary_key=True)
-    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     movie_id = models.IntegerField()
     is_favourite = models.BooleanField(default=False)
     added_at = models.DateTimeField(auto_now_add=True)
