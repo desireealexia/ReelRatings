@@ -91,71 +91,74 @@
         <div class="card-body">
           <div class="vote-average">
             <i class="fa fa-star"></i>
-            <strong>{% if average_rating %}
-              {{ average_rating|floatformat:1 }} / 10
+            <strong>{% if movie.average_rating %}
+              {{ movie.average_rating|floatformat:1 }} / 5
           {% else %}
               No ratings yet
           {% endif %}
         </strong>
           </div>
-          <br>
-          <h5 class="card-subtitle mb-2 text-muted">{{ movie.tagline }}</h5>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Reviews -->
-  <h2 class="mt-5">Reviews ({{ reviews.count }})</h2>
-  {% if reviews %}
-  <div class="row">
-    {% for review in reviews %}
-    <div class="col-md-4 mb-4">
-      <!-- Individual Review Card -->
-      <div class="card">
-        <div class="rating-card-body">
-          <h5 class="card-title">{{ review.user.username }}</h5>
-          <p class="card-text">
-            <strong>Rating:</strong> {{ review.rating }} / 5
-          </p>
-          <small>Reviewed on: {{ review.created_at }}</small>
-          <p class="card-text">{{ review.review_text }}</p>
-        </div>
-      </div>
-    </div>
-    {% endfor %}
-  </div>
-  {% else %}
-  <div class="card mt-3">
-    <div class="card-body">
-      <p>No reviews yet. Be the first to leave one!</p>
-    </div>
-  </div>
-  {% endif %}
   <!-- Review Form -->
   <h3 class="mt-5">Submit Your Review</h3>
   <div class="card mt-3">
     <div class="review-card-body">
-      <form method="POST" action="{% url 'movie_detail' movie.id %}">
-        {% csrf_token %}
-        <div class="star-card">
-          <input type="hidden" id="ratingValue" name="rating" value="0" />
+      {% if user.is_authenticated %}
+        <form method="POST" action="{% url 'movie_detail' movie.id %}">
+          {% csrf_token %}
+          <div class="star-card">
+            <input type="hidden" id="ratingValue" name="rating" value="0" />
 
-          <span onclick="setRating(1)" class="star">★</span>
-          <span onclick="setRating(2)" class="star">★</span>
-          <span onclick="setRating(3)" class="star">★</span>
-          <span onclick="setRating(4)" class="star">★</span>
-          <span onclick="setRating(5)" class="star">★</span>
+            <span onclick="setRating(1)" class="star">★</span>
+            <span onclick="setRating(2)" class="star">★</span>
+            <span onclick="setRating(3)" class="star">★</span>
+            <span onclick="setRating(4)" class="star">★</span>
+            <span onclick="setRating(5)" class="star">★</span>
 
-          <h3 id="output">Rating is: 0/5</h3>
-        </div>
-        <br />
-        <!-- Review text area -->
-        {{ form.review_text }}
-        <button type="submit" class="btn btn-primary">Submit Review</button>
-      </form>
+            <h3 id="output">Rating is: 0/5</h3>
+          </div>
+          <br />
+          <!-- Review text area -->
+          {{ form.review_text }}
+          <button type="submit" class="btn btn-primary">Submit Review</button>
+        </form>
+        {% else %}
+        <p class="review-login"><a href="{% url 'account_login' %}">Log in</a> to leave a review.</p>
+      {% endif %}
     </div>
   </div>
+
+    <!-- Reviews -->
+    <h2 class="mt-5">Reviews ({{ reviews.count }})</h2>
+    {% if reviews %}
+    <div class="row">
+      {% for review in reviews %}
+      <div class="col-md-4 mb-4">
+        <!-- Individual Review Card -->
+        <div class="card mt-3">
+          <div class="rating-card-body">
+            <h5 class="card-title"> Review by {{ review.user.username }}</h5>
+            <p class="card-text">
+              <strong>Rating:</strong> {{ review.rating }} / 5
+            </p>
+            <p class="card-text">{{ review.review_text }}</p>
+            <small>Reviewed on: {{ review.created_at }}</small>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="card mt-3">
+      <div class="card-body">
+        <p>No reviews yet. Be the first to leave one!</p>
+      </div>
+    </div>
+    {% endif %}
 
   <!-- Recommendations -->
   <h2 class="mt-5">Recommendations</h2>

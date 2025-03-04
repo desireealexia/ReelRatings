@@ -1,13 +1,14 @@
+from django.db.models import Avg 
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import messages
-from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.views import View
-from .models import Review, User
+from .models import Review
 from .forms import ReviewForm
 from .utils import get_tmdb_data, get_movie_details, get_tv_show_details
+
 
 urlpatterns = [
     # Your app URLs
@@ -77,38 +78,40 @@ class MovieDetailView(View):
         }
         
         return render(request, 'movies/movie_detail.html', context)
-
+    
     def post(self, request, movie_id):
-        # Ensure the user is logged in
-        if not request.user.is_authenticated:
-            return redirect('account_login')   # Redirect to login if user is not authenticated
-
-        # Fetch movie details from TMDb API
-        movie = get_tmdb_data(movie_id)
-        movie_title = movie.get('title', '')
-
-        # Process the review form submission
-        form = ReviewForm(request.POST)
-        if form.is_valid():
-            review = form.save(commit=False)
-            if isinstance(request.user, User):
-                review.user = request.user
-            else:
-                return redirect('account_login')  # Redirect if user is not valid
-            review.movie_id = movie_id
-            review.movie_title = movie_title
-            review.save()
+        movie_data = get_tmdb_data(f"movie/{movie_id}")
+        movie_title = movie_data.get('title', 'Unknown Title')
         
-            messages.success(request, 'Your review has been submitted.')
+        form = ReviewForm(request.POST)
+        
+        if form.is_valid():
+            review, created = Review.objects.update_or_create(
+                movie_id=int(movie_id),
+                user=request.user,
+                defaults={
+                    'rating': form.cleaned_data['rating'],
+                    'review_text': form.cleaned_data['review_text'],
+                    'movie_title': movie_title,
+                }
+            )
+            if created:
+                messages.success(request, "Your review has been submitted!")
+            else:
+                messages.info(request, "You already submitted a review for this movie.")
+            
             return redirect('movie_detail', movie_id=movie_id)
 
+        # If the form isn't valid, reload the page with errors
+        reviews = Review.objects.filter(movie_id=movie_id)
+        avg_rating = reviews.aggregate(Avg('rating'))['rating__avg'] or 0
+
         context = {
-            'movie': movie,
-            'reviews': Review.objects.filter(movie_id=movie_id).order_by('created_at'),
-            'recommendations': get_tmdb_data(f"movie/{movie_id}/recommendations", {'language': 'en-US'}).get('results', []),
+            'movie': movie_data,
+            'reviews': reviews,
+            'avg_rating': round(avg_rating, 1),
             'form': form,
         }
-
         return render(request, 'movies/movie_detail.html', context)
     
 class TVShowDetailView(View):
@@ -143,38 +146,44 @@ class TVShowDetailView(View):
         }
         
         return render(request, 'movies/tv_show_detail.html', context)
-
+    
     def post(self, request, series_id):
-        # Ensure the user is logged in
-        if not request.user.is_authenticated:
-            return redirect('account_login')   # Redirect to login if user is not authenticated
-
-        # Fetch TV show details from TMDb API
-        show = get_tmdb_data(series_id)
-        show_title = show.get('name', '') 
+        show_data = get_tmdb_data(f"tv/{series_id}")
+        show_title = show_data.get('name', 'Unknown Title')
         
-        # Process the review form submission
         form = ReviewForm(request.POST)
+        
         if form.is_valid():
-            review = form.save(commit=False)
-            if isinstance(request.user, User):
-                review.user = request.user
-            else:
-                return redirect('account_login')  # Redirect if user is not valid
-            review.tv_show_id = series_id
-            review.tv_show_title = show_title
-            review.save() 
+            review, created = Review.objects.update_or_create(
+                tv_show_id=int(series_id),
+                user=request.user,
+                defaults={
+                    'rating': form.cleaned_data['rating'],
+                    'review_text': form.cleaned_data['review_text'],
+                    'tv_show_title': show_title,
+                }
+            )
             
-            messages.success(request, 'Your review has been submitted.')
-            return redirect('tv_show_detail', tv_show_id=series_id)
+            if created:
+                messages.success(request, "Your review has been submitted!")
+            else:
+                messages.info(request, "You already submitted a review for this TV show.")
+            
+            return redirect('tv_show_detail', series_id=series_id)
+        
+        # Debugging form errors
+        print(f"Form errors: {form.errors}")
+
+        # If the form isn't valid, reload the page with errors
+        reviews = Review.objects.filter(tv_show_id=series_id)
+        avg_rating = reviews.aggregate(Avg('rating'))['rating__avg'] or 0
 
         context = {
-            'show': show,
-            'reviews': Review.objects.filter(tv_show_id=series_id).order_by("-created_at"),
-            'recommendations': get_tmdb_data(f"tv/{series_id}/recommendations", {'language': 'en-US'}).get('results', []),
+            'show': show_data,
+            'reviews': reviews,
+            'avg_rating': round(avg_rating, 1),
             'form': form,
         }
-
         return render(request, 'movies/tv_show_detail.html', context)
         
 class SearchResultsView(View):
