@@ -56,11 +56,7 @@ class MovieDetailView(View):
         form = ReviewForm()
         
         # Calculate average rating
-        if reviews.exists():
-            total_rating = sum([review.rating for review in reviews])
-            average_rating = total_rating / reviews.count()
-        else:
-            average_rating = 0
+        average_rating = reviews.aggregate(Avg('rating'))['rating__avg'] or 0
         
         # Paginate for recommendations section (4 per page)
         paginator = Paginator(recommendations, 4) 
@@ -125,11 +121,7 @@ class TVShowDetailView(View):
         form = ReviewForm()
         
         # Calculate average rating
-        if reviews.exists():
-            total_rating = sum([review.rating for review in reviews])
-            average_rating = total_rating / reviews.count()
-        else:
-            average_rating = 0
+        average_rating = reviews.aggregate(Avg('rating'))['rating__avg'] or 0
         
         # Paginate for recommendations section (4 per page)        
         paginator = Paginator(recommendations, 4)

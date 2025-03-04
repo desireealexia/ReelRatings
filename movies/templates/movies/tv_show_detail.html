@@ -102,20 +102,19 @@
         </div>
       </div>
 
-<!-- Vote Average and Tag line -->
+<!-- Vote Average -->
       <div class="card mt-3">
         <div class="card-body">
-          <!-- Vote Average -->
           <div class="vote-average">
             <i class="fa fa-star"></i>
-            <strong>{% if average_rating %}
-              {{ average_rating|floatformat:1 }} / 10
-          {% else %}
-              No ratings yet
-          {% endif %}
+            <strong>
+              {% if average_rating %}
+                    {{ average_rating }} / 5
+                {% else %}
+                    No ratings yet
+                {% endif %}
         </strong>
           </div>
-          <h5 class="card-subtitle mb-2 text-muted">{{ show.tagline }}</h5>
         </div>
       </div>
     </div>

@@ -86,16 +86,17 @@
         </div>
       </div>
 
-<!-- Vote Average and Tag line -->
+<!-- Vote Average -->
       <div class="card mt-3">
         <div class="card-body">
           <div class="vote-average">
             <i class="fa fa-star"></i>
-            <strong>{% if movie.average_rating %}
-              {{ movie.average_rating|floatformat:1 }} / 5
-          {% else %}
-              No ratings yet
-          {% endif %}
+            <strong>
+              {% if average_rating %}
+                    {{ average_rating }} / 5
+                {% else %}
+                    No ratings yet
+                {% endif %}
         </strong>
           </div>
         </div>
@@ -119,7 +120,7 @@
             <span onclick="setRating(4)" class="star">★</span>
             <span onclick="setRating(5)" class="star">★</span>
 
-            <h3 id="output">Rating is: 0/5</h3>
+            <p id="output">Rating is: 0/5</p>
           </div>
           <br />
           <!-- Review text area -->
