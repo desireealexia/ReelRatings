@@ -9,11 +9,6 @@ from .models import Review
 from .forms import ReviewForm
 from .utils import get_tmdb_data, get_movie_details, get_tv_show_details
 
-
-urlpatterns = [
-    # Your app URLs
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-
 # Create your views here.
 class HomePageView(View):
     def get(self, request):
@@ -56,7 +51,7 @@ class MovieDetailView(View):
         form = ReviewForm()
         
         # Calculate average rating
-        average_rating = reviews.aggregate(Avg('rating'))['rating__avg'] or 0
+        average_rating = round(reviews.aggregate(Avg('rating'))['rating__avg'] or 0, 1)
         
         # Paginate for recommendations section (4 per page)
         paginator = Paginator(recommendations, 4) 
@@ -121,7 +116,7 @@ class TVShowDetailView(View):
         form = ReviewForm()
         
         # Calculate average rating
-        average_rating = reviews.aggregate(Avg('rating'))['rating__avg'] or 0
+        average_rating = round(reviews.aggregate(Avg('rating'))['rating__avg'] or 0, 1)
         
         # Paginate for recommendations section (4 per page)        
         paginator = Paginator(recommendations, 4)
