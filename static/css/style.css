@@ -54,17 +54,8 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: 30px;
 }
 
-.hero .search-btn {
-  background-color: var(--vermillion);
-  color: var(--white);
-  border: none;
-  font-size: 1rem;
-  padding: 10px 20px;
-  border-radius: 5px;
-}
-
-.hero .search-btn:hover {
-  background-color: var(--xanthous);
+.hero h1, .hero p {
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 }
 
 /* Navbar */
@@ -181,7 +172,7 @@ h1, h2, h3, h4, h5, h6 {
 /* Toast Notifications */
 .toast {
   border-radius: 10px;
-  padding: 15px;
+  padding: 20px;
   color: var(--white);
   font-weight: 600;
 }
@@ -193,9 +184,11 @@ h1, h2, h3, h4, h5, h6 {
 
 .toast-body {
   background-color: var(--dim-gray);
+  padding: 15px;
 }
 
 /* Forms */
+/* Form Inputs */
 .form-control {
   border-radius: 5px;
   border: 2px solid var(--dim-gray);
@@ -203,20 +196,11 @@ h1, h2, h3, h4, h5, h6 {
 
 .form-control:focus {
   border-color: var(--vermillion);
+  box-shadow: 0 0 5px var(--vermillion);
 }
 
 select.form-control {
   cursor: pointer;
-}
-
-.btn-primary {
-  background-color: var(--picton-blue);
-  border: none;
-}
-
-.btn-primary:hover {
-  background-color: var(--vermillion);
-  color: var(--white);
 }
 
 .vote-average {
@@ -252,6 +236,15 @@ color: rgb(255, 255, 0);
 color: rgb(24, 159, 14);
 }
 
+.submit-btn {
+  margin: 10px;
+}
+
+.review-form p,
+.reviews p {
+  margin: 0;
+}
+
 /* Authentication pages (login, logout, signup) */
 
 /* Centring and Card Styling */
@@ -277,42 +270,19 @@ form input[type="password"] {
 }
 
 /* Buttons */
-.btn-primary {
+.btn {
   background-color: var(--vermillion);
-  border: none;
-}
-
-.btn-primary:hover {
-  background-color: var(--vermillion);
-}
-
-.btn-success {
-  background-color: var(--picton-blue);
-  border: none;
-}
-
-.btn-success:hover {
-  background-color: var(--picton-blue);
-}
-
-.btn-danger {
-  background-color: var(--xanthous);
-  border: none;
-  color: var(--black);
-}
-
-.btn-danger:hover {
-  background-color: var(--xanthous);
-}
-
-.btn-outline-secondary {
-  border-color: var(--dim-gray);
-  color: var(--dim-gray);
-}
-
-.btn-outline-secondary:hover {
-  background-color: var(--dim-gray);
   color: var(--white);
+  border: none;
+  font-size: 1rem;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+
+.btn:hover {
+  background-color: var(--xanthous);
+  color: var(--white);
+  border-color: var(--xanthous);
 }
 
 /* Links */

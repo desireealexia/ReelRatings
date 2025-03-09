@@ -3,6 +3,13 @@
 {% block title %} {{ show.name }} | TV Show Details {% endblock %} 
 {% block content %}
 <div class="container mt-4">
+  <!-- Breadcrumb -->
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ show.name }}</li>
+    </ol>
+</nav>
   <h1 class="text-center">{{ show.name }}</h1>
   <div class="row">
     <!-- Left Column: TV Show Poster and Basic Details -->
@@ -123,7 +130,7 @@
    <!-- Review Form -->
    <h3 class="mt-5">Submit Your Review</h3>
    <div class="card mt-3">
-     <div class="review-card-body">
+    <div class="review-form card-body">
       {% if user.is_authenticated %}
         <form method="POST" action="{% url 'tv_show_detail' show.id %}">
           {% csrf_token %}
@@ -138,10 +145,9 @@
   
             <p id="output">Rating is: 0/5</p>
           </div>
-          <br />
           <!-- Review text area -->
-          {{ form.review_text }}
-          <button type="submit" class="btn btn-primary">Submit Review</button>
+            {{ form.review_text }}
+          <button type="submit" class="btn submit-btn">Submit Review</button>
         </form>
         {% else %}
         <p class="review-login"><a href="{% url 'account_login' %}">Log in</a> to leave a review.</p>
@@ -151,13 +157,14 @@
 
   <!-- Reviews -->
   <h2 class="mt-5">Reviews ({{ reviews.count }})</h2>
+  <div class="reviews">
   {% if reviews %}
   <div class="row">
     {% for review in reviews %}
-    <div class="col-md-4 mb-4">
+    <div class="col-12 mb-4">
       <!-- Individual Review Card -->
       <div class="card mt-3">
-        <div class="rating-card-body">
+        <div class="card-body">
           <h5 class="card-title">Review by {{ review.user.username }}</h5>
           <p class="card-text">
             <strong>Rating:</strong> {{ review.rating }} / 5
@@ -174,6 +181,7 @@
     <div class="card-body">
       <p>No reviews yet. Be the first to leave one!</p>
     </div>
+  </div>
   </div>
   {% endif %}
 

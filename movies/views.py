@@ -1,6 +1,4 @@
 from django.db.models import Avg 
-from django.conf import settings
-from django.conf.urls.static import static
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
@@ -157,9 +155,6 @@ class TVShowDetailView(View):
                 messages.info(request, "You already submitted a review for this TV show.")
             
             return redirect('tv_show_detail', series_id=series_id)
-        
-        # Debugging form errors
-        print(f"Form errors: {form.errors}")
 
         # If the form isn't valid, reload the page with errors
         reviews = Review.objects.filter(tv_show_id=series_id)
@@ -172,7 +167,7 @@ class TVShowDetailView(View):
             'form': form,
         }
         return render(request, 'movies/tv_show_detail.html', context)
-        
+    
 class SearchResultsView(View):
     def get(self, request):
         query = request.GET.get('q', '')  # Get search query

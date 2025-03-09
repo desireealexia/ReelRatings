@@ -3,6 +3,13 @@
 {% block title %} {{ movie.title }} | Movie Details {% endblock %} 
 {% block content %}
 <div class="container mt-4">
+  <!-- Breadcrumb -->
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ movie.title }}</li>
+    </ol>
+</nav>
   <h1 class="text-center">{{ movie.title }}</h1>
   <div class="row">
     <!-- Left Column: Movie Poster -->
@@ -107,10 +114,10 @@
   <!-- Review Form -->
   <h3 class="mt-5">Submit Your Review</h3>
   <div class="card mt-3">
-    <div class="review-card-body">
+    <div class="review-form card-body">
       {% if user.is_authenticated %}
-        <form method="POST" action="{% url 'movie_detail' movie.id %}">
-          {% csrf_token %}
+      <form method="POST" action="{% url 'movie_detail' movie.id %}">
+        {% csrf_token %}
           <div class="star-card">
             <input type="hidden" id="ratingValue" name="rating" value="0" />
 
@@ -122,10 +129,9 @@
 
             <p id="output">Rating is: 0/5</p>
           </div>
-          <br />
           <!-- Review text area -->
           {{ form.review_text }}
-          <button type="submit" class="btn btn-primary">Submit Review</button>
+          <button type="submit" class="btn submit-btn">Submit Review</button>
         </form>
         {% else %}
         <p class="review-login"><a href="{% url 'account_login' %}">Log in</a> to leave a review.</p>
@@ -133,33 +139,64 @@
     </div>
   </div>
 
-    <!-- Reviews -->
+    <!-- Reviews Section -->
     <h2 class="mt-5">Reviews ({{ reviews.count }})</h2>
-    {% if reviews %}
-    <div class="row">
-      {% for review in reviews %}
-      <div class="col-md-4 mb-4">
-        <!-- Individual Review Card -->
-        <div class="card mt-3">
-          <div class="rating-card-body">
-            <h5 class="card-title"> Review by {{ review.user.username }}</h5>
-            <p class="card-text">
-              <strong>Rating:</strong> {{ review.rating }} / 5
-            </p>
-            <p class="card-text">{{ review.review_text }}</p>
-            <small>Reviewed on: {{ review.created_at }}</small>
-          </div>
+    <div class="reviews">
+        {% if reviews %}
+            <div class="row">
+                {% for review in reviews %}
+                    <div class="col-12 mb-4">
+                        <!-- Individual Review Card -->
+                        <div class="card mt-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Review by {{ review.user.username }}</h5>
+                                <p class="card-text">
+                                    <strong>Rating:</strong> {{ review.rating }} / 5
+                                </p>
+                                <p class="card-text review-text">{{ review.review_text }}</p>
+                                <small>Reviewed on: {{ review.created_at }}</small>
+                                {% if user.is_authenticated and review.user == user %}
+                                <div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="card mt-3">
+                <div class="card-body">
+                    <p>No reviews yet. Be the first to leave one!</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+<!-- Delete confirmation modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1"
+  aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" id="deleteReviewForm">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Delete comment?</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-      </div>
-      {% endfor %}
+        <div class="modal-body">
+          Are you sure you want to delete your comment? This action cannot be undone.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <!-- This is the new submit button that submits the form -->
+          <button type="submit" class="btn btn-danger">Delete</button>
+        </div>
+      </form>
     </div>
-    {% else %}
-    <div class="card mt-3">
-      <div class="card-body">
-        <p>No reviews yet. Be the first to leave one!</p>
-      </div>
-    </div>
-    {% endif %}
+  </div>
+</div>
+
 
   <!-- Recommendations -->
   <h2 class="mt-5">Recommendations</h2>
@@ -213,4 +250,8 @@
 </nav>
 {% endif %}
 </div>
+{% endblock content %}
+
+{% block extras %}
+<script src="{% static 'js/script.js' %}"></script>
 {% endblock %}

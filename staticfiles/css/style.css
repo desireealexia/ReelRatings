@@ -27,12 +27,39 @@ body {
   line-height: 1.6;
 }
 
-a {
-  text-decoration: none;
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Montserrat', serif;
+a {
+  text-decoration: none;
+  color: var(--dim-gray);
+}
+
+a:hover, a:focus {
+  color: var(--vermillion);
+}
+
+/* Navbar */
+.navbar {
+  background-color: var(--white);
+  padding: 10px 20px;
+}
+
+.navbar-brand img {
+  width: 100%;
+  max-width: 150px;
+}
+
+.navbar-nav .nav-item .nav-link {
+  color: var(--dim-gray);
+  padding: 10px 15px;
+  font-weight: 500;
+}
+
+.navbar-nav .nav-item .nav-link.active {
+  color: var(--vermillion);
 }
 
 /* Hero Section */
@@ -68,7 +95,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Navbar */
-.navbar {
+/* .navbar {
   background-color: var(--black);
 }
 
@@ -86,7 +113,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .navbar-nav .nav-link.active {
-  color: var(--xanthous)}
+  color: var(--xanthous)} */
 
 /* Card Styles for Movies and TV Shows */
 .card-item {
@@ -226,31 +253,20 @@ select.form-control {
 }
 
 /* Review section */
+
 .star {
 font-size: 2rem;
 color: var(--dim-gray);
 cursor: pointer;
 }
 
-.one {
-color: rgb(255, 0, 0);
-}
+/* Active star ratings (colored according to the rating) */
+.star.one { color: rgb(255, 0, 0); }
+.star.two { color: rgb(255, 106, 0); }
+.star.three { color: rgb(251, 255, 120); }
+.star.four { color: rgb(255, 255, 0); }
+.star.five { color: rgb(24, 159, 14); }
 
-.two {
-color: rgb(255, 106, 0);
-}
-
-.three {
-color: rgb(251, 255, 120);
-}
-
-.four {
-color: rgb(255, 255, 0);
-}
-
-.five {
-color: rgb(24, 159, 14);
-}
 
 /* Authentication pages (login, logout, signup) */
 
